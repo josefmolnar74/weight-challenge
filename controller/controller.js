@@ -2,6 +2,15 @@ var persons = require('../models/persons.js');
 var weight = require('../models/weight.js');
 var async = require('async');
 
+exports.checkLogin = function(data, done){
+  var object = JSON.parse(data);
+      console.log('[CME] check login');
+      persons.checkLoginData(object.email, object.password, function(err, rows){
+        if (err) return done(err);
+        done(null,rows);
+      });
+};
+
 exports.create = function(data, done){
   var object = JSON.parse(data);
   switch (object.content){
