@@ -124,71 +124,71 @@ var controller = require('./controller/controller.js');
     self.initializeSocket = function() {
 
         self.io.on('connection', function(socket){//Add socket
-            console.log("[CME] a user connected: " +socket.id);
-            socket.emit('welcome', JSON.stringify({ message: 'Welcome! to CME server', id: socket.id }));
+            console.log("[Josef] a user connected: " +socket.id);
+            socket.emit('welcome', JSON.stringify({ message: 'Welcome! to Josef server', id: socket.id }));
 
             socket.on('read', function(data){
               var errorCode = "";
-              console.log('[CME] Recieved get '+data);
+              console.log('[Josef] Recieved get '+data);
               controller.read(data, function(err, rows){
                 if(err) throw err;
-                console.log('[CME] show rows result ')
+                console.log('[Josef] show rows result ')
                 if ((rows === null) || (rows === undefined)) errorCode = "not_found";
                 var responseHdr = createHdrJsonObject(data, errorCode);
                 var responseMsg = createMsgJsonString(rows, responseHdr);
-                console.log('[CME] send data message =' +responseMsg)
+                console.log('[Josef] send data message =' +responseMsg)
                 socket.emit('data', responseMsg);
               });
             });
 
             socket.on('create', function(data){
               var errorCode = "";
-              console.log('[CME] Recieved create '+data);
+              console.log('[Josef] Recieved create '+data);
               controller.create(data, function(err, rows){
                 if(err) throw err;
                 if ((rows === null) || (rows === undefined)) errorCode = "already_exists";
                 var responseHdr = createHdrJsonObject(data, errorCode);
                 var responseMsg = createMsgJsonString(rows, responseHdr);
-                console.log('[CME] send data message =' +responseMsg)
+                console.log('[Josef] send data message =' +responseMsg)
                 socket.emit('data', responseMsg);
               });
             });
 
             socket.on('delete', function(data){
               var errorCode = "";
-              console.log('[CME] Recieved delete '+data);
+              console.log('[Josef] Recieved delete '+data);
               controller.delete(data, function(err, rows){
                 if(err) throw err;
                 var responseHdr = createHdrJsonObject(data, errorCode);
                 var responseMsg = createMsgJsonString(rows, responseHdr);
-                console.log('[CME] send data message =' +responseMsg)
+                console.log('[Josef] send data message =' +responseMsg)
                 socket.emit('data', responseMsg);
               });
             });
 
             socket.on('update', function(data){
               var errorCode = "";
-              console.log('[CME] Recieved update '+data);
+              console.log('[Josef] Recieved update '+data);
               controller.update(data, function(err, rows){
                 if(err) throw err;
                 var responseHdr = createHdrJsonObject(data, errorCode);
                 var responseMsg = createMsgJsonString(rows, responseHdr);
-                console.log('[CME] send data message =' +responseMsg)
+                console.log('[Josef] send data message =' +responseMsg)
                 socket.emit('data', responseMsg);
               });
             });
 
             socket.on('disconnect', function(){
-              console.log("[CME] Client disconnected")});
+              console.log("[Josef] Client disconnected")});
         });
 
         self.io.on('data', function(data) {
-            console.log('[CME] Data recieved');
+            console.log('[Josef] Data recieved');
             console.log(data);
         });
 
         self.io.on('disconnect', function(data) {
-            console.log("[CME] Client disconnected 2");
+            console.log("[Josef] Client disconnected 2");
         });
     };
     /**
@@ -205,7 +205,7 @@ var controller = require('./controller/controller.js');
 
           //Connect to mongodb database
 //          db.connect(db.MODE_PRODUCTION, function(err){
-//            console.log("[CME] Connected to MySQL");
+//            console.log("[Josef] Connected to MySQL");
 //            if(err) throw err;
 //          });
     };
@@ -236,8 +236,8 @@ weigthApp.start();
 
 // Send current time to all connected clients
 function sendTime() {
-   console.log('[CME] sendTime io.emit');
-    weigthApp.io.emit('time', "ping");
+   console.log('[Josef] sendTime io.emit');
+    weigthApp.io.emit('time', new Date().getTime());
 }
 
 function createHdrJsonObject(data, error){
@@ -245,7 +245,7 @@ function createHdrJsonObject(data, error){
                         function: JSON.parse(data).function,
                         content: JSON.parse(data).content,
                         errorCode: error};
-  console.log('[CME] create responseHeader')
+  console.log('[Josef] create responseHeader')
   console.log(responseHeader)
   return responseHeader;
 }
