@@ -1,6 +1,6 @@
 node('nodejs') {
   stage 'build'
-  openshiftBuild(buildConfig: 'nodejs-weight-challenge', showBuildLogs: 'true')
+  openshiftBuild(buildConfig: 'nodejs-ex', showBuildLogs: 'true')
   stage 'deploy'
-  openshiftDeploy(deploymentConfig: 'nodejs-weight-challenge')
+  openshiftDeploy(deploymentConfig: 'nodejs-ex')
 }

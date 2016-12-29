@@ -1,4 +1,4 @@
-var db = require('../db.js');
+//var db = require('../db.js');
 var async = require('async');
 
 exports.create = function(object, callback) {

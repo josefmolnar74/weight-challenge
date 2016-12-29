@@ -21,7 +21,6 @@ exports.create = function(data, done){
         done(null, rows);
       });
       break;
-
   };
 };
 
