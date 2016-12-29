@@ -113,6 +113,7 @@ var controller = require('./controller/controller.js');
         self.app = express();
         self.server = require('http').Server(self.app);
         self.io = require('socket.io')(self.server);
+        module.exports = self.app; // something that new openshift v.3 may need ??
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes) {
@@ -222,6 +223,8 @@ var controller = require('./controller/controller.js');
         // Send current time every 10 secs
         setInterval(sendTime, 10000);
     };
+
+
 };   /*  Sample Application.  */
 
 /**
