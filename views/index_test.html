@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+        <title></title>
+          button{width: 100px;}input{width: 300px;}
+          #personData {
+              float:left;
+          }
+          #eventData {
+              float:left;
+          }
+        </style>
+    </head>
+    <body>
+        TestDataMessage:<br>
+          <input type="text" name="Test data message" id="testDataMessage">
+        <br>
+        TestDataCommand:<br>
+          <input type="text" name="Test data command" id="testDataCommand">
+        <br>
+
+        <button id="testCommandButton">Run test command</button>
+        <button id="test">test</button>
+        <button id="clear">clear</button>
+
+        <ul id='messages'></ul>
+
+        <script src='/socket.io/socket.io.js'></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>
+
+            var test = [
+              {case: 'Create a user', command: 'create', data: {content: 'person', name: 'CME_TEST Name 1', email: 'CME_TEST email1@gmail.com', password: "CME_TEST password2", avatar: '1'}},
+              {case: 'Read user data', command: 'read', data: {content: 'person', person_ID: ''}},
+              {case: 'Update user', command: 'update', data: {content: 'person', name: 'CME_TEST Name 2', email: 'CME_TEST email1@gmail.com', password: "CME_TEST password1", avatar: '2'}},
+              {case: 'Create a Patient', command: 'create', data: {content: 'patient', person_ID: '', relationship: 'CME_TEST Father', admin: '1', diagnose: 'CME_TEST Diagnose 1', year_of_birth: 'CME_TEST 123456789', patient_name: "CME_TEST Patient name 1"}},
+              {case: 'Read patient data', command: 'read', data: {content: 'patient', patient_ID: ''}},
+              {case: 'Update patient data', command: 'update', data: {content: 'patient', person_ID: '', patient_ID: '', relationship: 'CME_TEST Mother', admin: '1', diagnose: 'CME_TEST Diagnose 2', year_of_birth: 'CME_TEST 234567890', patient_name: 'CME_TEST Patient name 2'}},
+              {case: 'Create Health care', command: 'create', data: {content: 'healthcare', healthcare_ID: '', title: 'CME_TEST title1', name: 'CME_TEST name1', department: "CME_TEST department1", phone_number1: "CME_TEST phone_number1", phone_number2: 'CME_TEST phone_number1', phone_number3: 'CME_TEST phone_number1', email: 'CME_TEST email1', avatar: '1'}},
+              {case: 'Read user data', command: 'read', data: {content: 'healthcare', healthcare_ID: ''}},
+              {case: 'Update Health care', command: 'update', data: {content: 'healthcare', healthcare_ID: '', title: 'CME_TEST title2', name: 'CME_TEST name2', department: "CME_TEST department2", phone_number1: "CME_TEST phone_number2", phone_number2: 'CME_TEST phone_number2', phone_number3: 'CME_TEST phone_number2', email: 'CME_TEST email2', avatar: '1'}},
+              {case: 'Read user data', command: 'read', data: {content: 'patient', patient_ID: ''}},
+//              {case: 'Invite new care team member', command: 'create', data: {content: 'person', email: 'email3@gmail.com', patient_ID: '', admin: '1', relationship: 'brother'}},
+              {case: 'Create a event', command: 'create', data: {content: 'event', patient_ID: '', person_ID: '', healthcare_ID: '', healthcare_name: 'CME_TEST healthcare_name1', category: 'CME_TEST category1', sub_category: 'CME_TEST sub_category1', date: '2016-01-01', time: '01:00:00', date: '', time: '', notes: 'CME_TEST Notes 1', status: 'CME_TEST Status 1', emotion: 'CME_TEST Emotion 1'}},
+              {case: 'Read event data', command: 'read', data: {content: 'event', event_ID: ''}},
+              {case: 'Read patient event data', command: 'read', data: {content: 'event', patient_ID: ''}},
+              {case: 'Update a event', command: 'update', data: {content: 'event', patient_ID: '', person_ID: '', healthcare_ID: '', healthcare_name: 'CME_TEST healthcare_name1', category: 'CME_TEST category1', sub_category: 'CME_TEST sub_category1', date: '2016-01-01', time: '01:00:00', date: '', time: '', notes: 'CME_TEST Notes 1', status: 'CME_TEST Status 1', emotion: 'CME_TEST Emotion 1'}},
+              {case: 'Read event data', command: 'read', data: {content: 'event', event_ID: ''}},
+              {case: 'Create a status', command: 'create', data: {content: 'status', patient_ID: '', person_ID: '', date: '2016-01-01', time: '01:00:00', status: 'CME_TEST Status text 1', emotion: 'CME_TEST Emotion 1', share: '0'}},
+              {case: 'Read status data', command: 'read', data: {content: 'status', patient_ID: ''}},
+              {case: 'Update status', command: 'update', data: {content: 'status', status_ID: '', patient_ID: '', person_ID: '', date: '2016-01-02', time: '02:00:00', status: 'CME_TEST Status text 2', emotion: 'CME_TEST Emotion 2', share: '1'}},
+              {case: 'Read status data', command: 'read', data: {content: 'status', status_ID: ''}},
+              {case: 'Create a beverage', command: 'create', data: {content: 'beverage', beverage_ID: '', patient_ID: '', person_ID: '',  date: '2016-01-01', time: '01:00:00', amount: '1'}},
+              {case: 'Read beverage data', command: 'read', data: {content: 'beverage', patient_ID: ''}},
+              {case: 'Update beverage', command: 'update', data: {content: 'beverage', beverage_ID: '', patient_ID: '', person_ID: '', date: '2016-01-02', time: '02:00:00', amount: '2'}},
+              {case: 'Read beverage data', command: 'read', data: {content: 'beverage', beverage_ID: ''}},
+              {case: 'Create a sideeffect', command: 'create', data: {content: 'sideeffect', patient_ID: '', date: '2016-01-01', time: '01:00:00', type: 'CME_TEST type of sideeffect 1', value: 'CME_TEST value 1', notes: 'CME_TEST note 1'}},
+              {case: 'Read sideeffect data', command: 'read', data: {content: 'sideeffect', patient_ID: ''}},
+              {case: 'Update sideeffect', command: 'update', data: {content: 'sideeffect', sideeffect_ID: '', date: '2016-01-02', time: '02:00:00', type: 'CME_TEST type of sideeffect 2', severity: 'CME_TEST value 2', notes: 'CME_TEST note 2'}},
+              {case: 'Read sideeffect data', command: 'read', data: {content: 'sideeffect', sideeffect_ID: ''}},
+              {case: 'Create a healthdata', command: 'create', data: {content: 'healthdata', patient_ID: '', date: '2016-01-01', time: '01:00:00', type: 'CME_TEST type of healthdata 1', value: 'CME_TEST value 1'}},
+              {case: 'Read healthdata data', command: 'read', data: {content: 'healthdata', patient_ID: ''}},
+              {case: 'Update healthdata', command: 'update', data: {content: 'healthdata', healthdata_ID: '', date: '2016-01-02', time: '02:00:00', type: 'CME_TEST type of healthdata 2', severity: 'CME_TEST value 2'}},
+              {case: 'Read healthdata data', command: 'read', data: {content: 'healthdata', healthdata_ID: ''}},
+              {case: 'Check login', command: 'login', data: {content: 'person', email: 'email1@gmail.com', password: 'password1'}},
+              {case: 'Delete beverage', command: 'delete', data: {content: 'beverage', beverage_ID: ''}},
+              {case: 'Delete healthdata', command: 'delete', data: {content: 'healthdata', healthdata_ID: ''}},
+              {case: 'Delete sideeffect', command: 'delete', data: {content: 'sideeffect', sideeffect_ID: ''}},
+              {case: 'Delete status', command: 'delete', data: {content: 'status', status_ID: ''}},
+              {case: 'Delete event', command: 'delete', data: {content: 'event', event_ID: ''}},
+              {case: 'Delete healthcare', command: 'delete', data: {content: 'healthcare', healthcare_ID: ''}},
+              {case: 'Delete patient', command: 'delete', data: {content: 'patient', patient_ID: ''}},
+              {case: 'Delete user', command: 'delete', data: {content: 'person', person_ID: ''}}
+            ];
+
+            var testIndex = 0;
+            var personIndex = 0;
+            var patientIndex = 0;
+            var healthcareIndex = 0;
+            var eventIndex = 0;
+            var statusIndex = 0;
+            var sideeffectIndex = 0;
+            var beverageIndex = 0;
+            var nutritionIndex = 0;
+            var setupSocketForTest = false;
+
+            function sendTestCommand(){
+  //              addMessage('sendTestCommand with setUpSocketForTest =' + setupSocketForTest)
+                if (setupSocketForTest === false) setupSocketOnDataForTest();
+                if (testIndex < test.length){
+                  addMessage('RUN test number : ' +testIndex +', test case: ' +test[testIndex].case);
+                  switch (test[testIndex].data.content){
+
+                    case 'person':
+                      test[testIndex].data.person_ID = personIndex;
+                      break;
+
+                    case 'patient':
+                      test[testIndex].data.person_ID = personIndex;
+                      test[testIndex].data.patient_ID = patientIndex;
+                      break;
+
+                    case 'healthcare':
+                      test[testIndex].data.healthcare_ID = healthcareIndex;
+                      test[testIndex].data.patient_ID = patientIndex;
+                      break;
+
+                    case 'event':
+                      test[testIndex].data.patient_ID = patientIndex;
+                      test[testIndex].data.person_ID = personIndex;
+                      test[testIndex].data.healthcare_ID = healthcareIndex;
+                      test[testIndex].data.event_ID = eventIndex;
+                      break;
+
+                    case 'status':
+                      test[testIndex].data.patient_ID = patientIndex;
+                      test[testIndex].data.person_ID = personIndex;
+                      test[testIndex].data.status_ID = statusIndex;
+                      break;
+
+                    case 'sideeffect':
+                      test[testIndex].data.patient_ID = patientIndex;
+                      test[testIndex].data.person_ID = personIndex;
+                      test[testIndex].data.sideeffect_ID = sideeffectIndex;
+                      break;
+
+                    case 'beverage':
+                      test[testIndex].data.patient_ID = patientIndex;
+                      test[testIndex].data.beverage_ID = beverageIndex;
+                      break;
+
+                    case 'nutrition':
+                      test[testIndex].data.patient_ID = patientIndex;
+                      test[testIndex].data.nutrition_ID = nutritionIndex;
+                      break;
+
+                  }
+                  addMessage('SEND command ' +test[testIndex].command +' with data '+(JSON.stringify(test[testIndex].data)));
+                  socket.emit(test[testIndex].command, JSON.stringify(test[testIndex].data));
+                }
+            }
+
+            var socket = io();
+            var setupSocketOn = false;
+
+            $('#testCommandButton').click(function(){
+              if (!setupSocketOn){
+                socket.on('data', function(data) {
+                    console.log('[CME]: data recieved')
+                    addMessage('RECIEVE'+data);
+                    setupSocketOn = true
+                })
+              }
+              var data = document.getElementById("testDataMessage").value;
+              var command = document.getElementById("testDataCommand").value;
+              var message = 'Send command '+command +' with data ' +data;
+              addMessage(message);
+              socket.emit(command,data);
+            });
+
+            $('#test').click(function(){
+              addMessage('Start test program');
+              testIndex = 0;
+              sendTestCommand();
+            });
+
+            $('#clear').click(function(){
+              addMessage('Clear the database');
+              var msgData = {content: "blackhole"};
+              socket.emit("delete", JSON.stringify(msgData))
+            });
+
+            socket.on('welcome', function(data) {
+                addMessage(data);
+                console.log('Welcome Cient to CME server');
+
+                // Respond with a message including this clients' id sent from the server
+                socket.emit('i am client', {data: 'Client ready for business', id: data.id});
+            });
+
+            function setupSocketOnDataForTest(){
+//              addMessage('setUpSocketOnDataForTest')
+              setupSocketForTest = true;
+              socket.on('data', function(data) {
+                  console.log('[CME]: data recieved')
+                  addMessage('RECIEVE'+data);
+                  if (test[testIndex].command == "create") {
+                    console.log("[CME] data "+data);
+                    var index = data.indexOf("},{");
+                    console.log("[CME] index "+index);
+                    var subData = data.substr(index+2);
+                    console.log('[CME] show subdata = '+subData)
+                    var object = JSON.parse(subData);
+                    console.log(object);
+                    if (object != null) {
+
+                      switch (test[testIndex].data.content){
+
+                          case 'person':
+                            personIndex = object.person_ID;
+                            test[testIndex].data.person_ID = personIndex;
+                            break;
+
+                          case 'patient':
+                            patientIndex = object.patient_ID;
+                            test[testIndex].data.patient_ID = patientIndex;
+                            break;
+
+                          case 'healthcare':
+                            healthcareIndex = object.healthcare_data[0].healthcare_ID;
+                            test[testIndex].data.healthcare_ID = healthcareIndex;
+                            break;
+
+                          case 'event':
+                            eventIndex = object.event_data[0].event_ID;
+                            test[testIndex].data.event_ID = eventIndex;
+                            break;
+
+                          case 'status':
+                            statusIndex = object.status_data[0].status_ID;
+                            test[testIndex].data.status_ID = statusIndex;
+                            break;
+
+                          case 'sideeffect':
+                            sideeffectIndex = object.sideeffect_data[0].sideeffect_ID;
+                            test[testIndex].data.sideeffect_ID = sideeffectIndex;
+                            break;
+
+                          case 'beverage':
+                            beverageIndex = object.beverage_data[0].beverage_ID;
+                            test[testIndex].data.beverage_ID = beverageIndex;
+                            break;
+
+                      }
+                    }
+                  }
+                  testIndex++;
+                  sendTestCommand();
+              });
+
+            }
+
+
+            socket.on("disconnect", function(){
+                console.log("client disconnected from server");
+            });
+
+            function addMessage(message) {
+                var text = document.createTextNode(message),
+                    el = document.createElement('li'),
+                    messages = document.getElementById('messages');
+
+                el.appendChild(text);
+                messages.appendChild(el);
+            }
+        </script>
+    </body>
+</html>

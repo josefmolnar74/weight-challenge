@@ -1,197 +1,366 @@
+#!/bin/env node
 //  OpenShift sample Node application
-var express     = require('express'),
-    fs          = require('fs'),
-    app         = express(),
-    eps         = require('ejs'),
-    server      = require('http').Server(app),
-    io          = require('socket.io')(server),
-    controller  = require('./controller/controller.js'),
-    morgan      = require('morgan');
+var express = require('express');
+var fs = require('fs');
+var assert = require('assert');
+var io = require('socket.io');
+var controller = require('./controller/controller.js');
 
-Object.assign=require('object-assign')
+ /**
+ *  Define the sample application.
+ */
 
-app.engine('html', require('ejs').renderFile);
-app.use(morgan('combined'))
+ var SampleApp = function() {
+    //  Scope.
+    var self = this;
 
-var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
-    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
-    mongoURLLabel = "";
+    /*  ================================================================  */
+    /*  Helper functions.                                                 */
+    /*  ================================================================  */
 
-if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
-  var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
-      mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
-      mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
-      mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
-      mongoPassword = process.env[mongoServiceName + '_PASSWORD']
-      mongoUser = process.env[mongoServiceName + '_USER'];
+    /**
+     *  Set up server IP address and port # using env variables/defaults.
+     */
+    self.setupVariables = function() {
+        //  Set the environment variables we need.
+        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+        self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8084;
 
-  if (mongoHost && mongoPort && mongoDatabase) {
-    mongoURLLabel = mongoURL = 'mongodb://';
-    if (mongoUser && mongoPassword) {
-      mongoURL += mongoUser + ':' + mongoPassword + '@';
-    }
-    // Provide UI label that excludes user id and pw
-    mongoURLLabel += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
-    mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
+        if (typeof self.ipaddress === "undefined") {
+            //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
+            //  allows us to run/test the app locally.
+            console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
+            self.ipaddress = "127.0.0.1";
+        };
+    };
 
-  }
+
+    /**
+     *  Populate the cache.
+     */
+    self.populateCache = function() {
+        if (typeof self.zcache === "undefined") {
+            self.zcache = { 'index.html': '' };
+        }
+
+        //  Local cache for static content.
+//        self.zcache['index.html'] = fs.readFileSync('./index.html');
+        self.zcache['index.html'] = fs.readFileSync('views/index_test.html');
+    };
+
+
+    /**
+     *  Retrieve entry (content) from cache.
+     *  @param {string} key  Key identifying content to retrieve from cache.
+     */
+    self.cache_get = function(key) { return self.zcache[key]; };
+
+
+    /**
+     *  terminator === the termination handler
+     *  Terminate server on receipt of the specified signal.
+     *  @param {string} sig  Signal to terminate on.
+     */
+    self.terminator = function(sig){
+        if (typeof sig === "string") {
+           console.log('%s: Received %s - terminating sample app ...',
+                       Date(Date.now()), sig);
+           process.exit(1);
+        }
+        console.log('%s: Node server stopped.', Date(Date.now()) );
+    };
+
+
+    /**
+     *  Setup termination handlers (for exit and a list of signals).
+     */
+    self.setupTerminationHandlers = function(){
+        //  Process on exit and signals.
+        process.on('exit', function() { self.terminator(); });
+
+        // Removed 'SIGPIPE' from the list - bugz 852598.
+        ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT',
+         'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGTERM'
+        ].forEach(function(element, index, array) {
+            process.on(element, function() { self.terminator(element); });
+        });
+    };
+
+    /*  ================================================================  */
+    /*  App server functions (main app logic here).                       */
+    /*  ================================================================  */
+
+    /**
+     *  Create the routing table entries + handlers for the application.
+     */
+     //Här sätter jag upp metoder för interaktion med
+    self.createRoutes = function() {
+        self.routes = { };
+
+        self.routes['/'] = function(req, res) {
+            res.setHeader('Content-Type', 'text/html');
+            res.send(self.cache_get('index.html') );
+        };
+
+        self.routes['/create'] = function(req, res) {
+            console.log("[CME] create from")
+            res.setHeader('Content-Type', 'text/html');
+            res.send('[CME] create ' );
+        };
+
+        self.routes['/read'] = function(req, res) {
+          console.log("[CME] read from")
+          res.setHeader('Content-Type', 'text/html');
+          res.send('[CME] read ' );
+        };
+
+        self.routes['/update'] = function(req, res) {
+          console.log("[CME] create from")
+          res.setHeader('Content-Type', 'text/html');
+          res.send('[CME] update ' );
+        };
+
+        self.routes['/delete'] = function(req, res) {
+          console.log("[CME] create from")
+          res.setHeader('Content-Type', 'text/html');
+          res.send('[CME] delete ' );
+        };
+
+    };
+
+    /**
+     *  Initialize the server (express) and create the routes and register
+     *  the handlers.
+     */
+    self.initializeServer = function() {
+        self.createRoutes();
+        self.app = express();
+        self.server = require('http').Server(self.app);
+        self.io = require('socket.io')(self.server);
+
+        //  Add handlers for the app (from the routes).
+        for (var r in self.routes) {
+            self.app.get(r, self.routes[r]);
+        };
+    };
+
+    self.initializeSocket = function() {
+
+        self.io.on('connection', function(socket){//Add socket
+            console.log("[CME] a user connected: " +socket.id);
+            socket.emit('welcome', JSON.stringify({ message: 'Welcome! to CME server', id: socket.id }));
+
+            socket.on('login', function(data){
+              var errorCode = "";
+              console.log("[CME] Client login request");
+              controller.checkLogin(data, function(err, rows){
+                if(err) throw err;
+//                if (rows == undefined) rows = ["Login failed"];
+                console.log(rows)
+                if ((rows === null) || (rows === undefined)) errorCode = "login_failed";
+                var dataMsg = JSON.stringify(createHdrJsonObject(data, errorCode)) +',' +JSON.stringify(rows);
+                console.log('[CME] send data message =' +dataMsg)
+                socket.emit('data', dataMsg);
+              });
+            });
+
+            socket.on('read', function(data){
+              var errorCode = "";
+              console.log('[CME] Recieved get '+data);
+              controller.read(data, function(err, rows){
+                if(err) throw err;
+                console.log('[CME] show rows result ')
+                if ((rows === null) || (rows === undefined)) errorCode = "not_found";
+                var responseHdr = createHdrJsonObject(data, errorCode);
+                var responseMsg = createMsgJsonString(rows, responseHdr);
+                console.log('[CME] send data message =' +responseMsg)
+                socket.emit('data', responseMsg);
+              });
+            });
+
+            socket.on('create', function(data){
+              var errorCode = "";
+              console.log('[CME] Recieved create '+data);
+              controller.create(data, function(err, rows){
+                if(err) throw err;
+                if ((rows === null) || (rows === undefined)) errorCode = "already_exists";
+                var responseHdr = createHdrJsonObject(data, errorCode);
+                var responseMsg = createMsgJsonString(rows, responseHdr);
+                console.log('[CME] send data message =' +responseMsg)
+                socket.emit('data', responseMsg);
+              });
+            });
+
+            socket.on('delete', function(data){
+              var errorCode = "";
+              console.log('[CME] Recieved delete '+data);
+              controller.delete(data, function(err, rows){
+                if(err) throw err;
+                var responseHdr = createHdrJsonObject(data, errorCode);
+                var responseMsg = createMsgJsonString(rows, responseHdr);
+                console.log('[CME] send data message =' +responseMsg)
+                socket.emit('data', responseMsg);
+              });
+            });
+
+            socket.on('update', function(data){
+              var errorCode = "";
+              console.log('[CME] Recieved update '+data);
+              controller.update(data, function(err, rows){
+                if(err) throw err;
+                var responseHdr = createHdrJsonObject(data, errorCode);
+                var responseMsg = createMsgJsonString(rows, responseHdr);
+                console.log('[CME] send data message =' +responseMsg)
+                socket.emit('data', responseMsg);
+              });
+            });
+
+/*            socket.on('mail', function(data){
+                var errorCode = "";
+                console.log("[CME] Client login request");
+                controller.send(data,
+                function(err){
+                    if(err) throw err;
+                });
+            });
+*/
+            socket.on('disconnect', function(){
+              console.log("[CME] Client disconnected")});
+        });
+
+        self.io.on('data', function(data) {
+            console.log('[CME] Data recieved');
+            console.log(data);
+        });
+
+        self.io.on('disconnect', function(data) {
+            console.log("[CME] Client disconnected 2");
+        });
+    };
+    /**
+     *  Initializes the sample application.
+     */
+    self.initialize = function() {
+          self.setupVariables();
+          self.populateCache();
+          self.setupTerminationHandlers();
+
+          // Create the express server and routes.
+          self.initializeServer();
+
+          // Create socket callbacks
+          self.initializeSocket();
+
+    };
+
+    /**
+     *  Start the server (starts up the sample application).
+     */
+    self.start = function() {
+
+        //  Start the app on the specific interface (and port).
+         self.server.listen(self.port, self.ipaddress, function() {
+            console.log('%s: Node server started on %s:%d ...',
+                        Date(Date.now() ), self.ipaddress, self.port);
+        });
+        // Send current time every 10 secs
+        setInterval(sendTime, 10000);
+    };
+};   /*  Sample Application.  */
+
+/**
+ *  main():  Main code.
+ */
+var zapp = new SampleApp();
+zapp.initialize();
+zapp.start();
+
+// Send current time to all connected clients
+function sendTime() {
+   console.log('[CME] sendTime io.emit');
+    zapp.io.emit('time', "ping");
 }
-var db = null,
-    dbDetails = new Object();
 
-var initDb = function(callback) {
-  if (mongoURL == null) return;
+function createHdrJsonObject(data, error){
+  var responseHeader = { message_ID: JSON.parse(data).message_ID,
+                        function: JSON.parse(data).function,
+                        content: JSON.parse(data).content,
+                        errorCode: error};
+  console.log('[CME] create responseHeader')
+  console.log(responseHeader)
+  return responseHeader;
+}
 
-  var mongodb = require('mongodb');
-  if (mongodb == null) return;
+function createDataJsonObject(rows, content){
+  var responseData;
+  switch (content){
+    case 'invite':
+      responseData = {invite_data: rows};
+      break
 
-  mongodb.connect(mongoURL, function(err, conn) {
-    if (err) {
-      callback(err);
-      return;
-    }
+    case 'healthcare':
+      responseData = {healthcare_data: rows};
+      break;
 
-    db = conn;
-    dbDetails.databaseName = db.databaseName;
-    dbDetails.url = mongoURLLabel;
-    dbDetails.type = 'MongoDB';
+    case 'event':
+      responseData = {event_data: rows};
+      break;
 
-    console.log('Connected to MongoDB at: %s', mongoURL);
-  });
+    case 'status':
+      responseData = {status_data: rows};
+      break;
+
+    case 'beverage':
+      responseData = {beverage_data: rows};
+      break;
+
+    case 'sideeffect':
+      responseData = {sideeffect_data: rows};
+      break;
+
+    case 'healthdata':
+      responseData = {healthdata_data: rows};
+      break;
+
+    case 'question':
+      responseData = {question_data: rows};
+      break;
+
+    case 'article':
+      responseData = {article_data: rows};
+      break;
+
+    case 'journal':
+      responseData = {event_data: rows[0],
+                      status_data: rows[1],
+                      sideeffect_data: rows[2],
+                      beverage_data: rows[3]};
+      break;
+
+  }
+  return responseData;
 };
 
-var initializeSocket = function() {
-    console.log('[Josef] InitializeSocket');
-
-    io.on('connection', function(socket){//Add socket
-        console.log("[Josef] a user connected: " +socket.id);
-        socket.emit('welcome', JSON.stringify({ message: 'Welcome! to Josef server', id: socket.id }));
-
-        socket.on('login', function(data){
-          var errorCode = "";
-          console.log("[CME] Client login request");
-          controller.checkLogin(data, function(err, rows){
-            if(err) throw err;
-            console.log(rows)
-            if ((rows === null) || (rows === undefined)) errorCode = "login_failed";
-            var dataMsg = JSON.stringify(createHdrJsonObject(data, errorCode)) +',' +JSON.stringify(rows);
-            console.log('[CME] send data message =' +dataMsg)
-            socket.emit('data', dataMsg);
-          });
-        });
-
-        socket.on('read', function(data){
-          var errorCode = "";
-          console.log('[Josef] Recieved get '+data);
-          controller.read(data, function(err, rows){
-            if(err) throw err;
-            console.log('[Josef] show rows result ')
-            if ((rows === null) || (rows === undefined)) errorCode = "not_found";
-            var responseHdr = createHdrJsonObject(data, errorCode);
-            var responseMsg = createMsgJsonString(rows, responseHdr);
-            console.log('[Josef] send data message =' +responseMsg)
-            socket.emit('data', responseMsg);
-          });
-        });
-
-        socket.on('create', function(data){
-          var errorCode = "";
-          console.log('[Josef] Recieved create '+data);
-          controller.create(data, function(err, rows){
-            if(err) throw err;
-            if ((rows === null) || (rows === undefined)) errorCode = "already_exists";
-            var responseHdr = createHdrJsonObject(data, errorCode);
-            var responseMsg = createMsgJsonString(rows, responseHdr);
-            console.log('[Josef] send data message =' +responseMsg)
-            socket.emit('data', responseMsg);
-          });
-        });
-
-        socket.on('delete', function(data){
-          var errorCode = "";
-          console.log('[Josef] Recieved delete '+data);
-          controller.delete(data, function(err, rows){
-            if(err) throw err;
-            var responseHdr = createHdrJsonObject(data, errorCode);
-            var responseMsg = createMsgJsonString(rows, responseHdr);
-            console.log('[Josef] send data message =' +responseMsg)
-            socket.emit('data', responseMsg);
-          });
-        });
-
-        socket.on('update', function(data){
-          var errorCode = "";
-          console.log('[Josef] Recieved update '+data);
-          controller.update(data, function(err, rows){
-            if(err) throw err;
-            var responseHdr = createHdrJsonObject(data, errorCode);
-            var responseMsg = createMsgJsonString(rows, responseHdr);
-            console.log('[Josef] send data message =' +responseMsg)
-            socket.emit('data', responseMsg);
-          });
-        });
-
-        socket.on('disconnect', function(){
-          console.log("[Josef] Client disconnected")});
-    });
-
-    io.on('data', function(data) {
-        console.log('[Josef] Data recieved');
-        console.log(data);
-    });
-
-    io.on('disconnect', function(data) {
-        console.log("[Josef] Client disconnected 2");
-    });
-};
-
-app.get('/', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
+function createMsgJsonString(rows, responseHdr){
+  var responseMsg = "";
+  if ((responseHdr.content == 'invite') ||
+      (responseHdr.content == 'healthcare') ||
+      (responseHdr.content == 'journal') ||
+      (responseHdr.content == 'event') ||
+      (responseHdr.content == 'status') ||
+      (responseHdr.content == 'beverage') ||
+      (responseHdr.content == 'question') ||
+      (responseHdr.content == 'article') ||
+      (responseHdr.content == 'healthdata') ||
+      (responseHdr.content == 'sideeffect'))
+  {
+    // Package result rows into one data object, to manage JSON unpackage on the client side
+    //only applicable for those data where rows > 1 (person and patient is excluded for now)
+    var responseData = createDataJsonObject(rows,responseHdr.content)
+    responseMsg = JSON.stringify(responseHdr) +',' +JSON.stringify(responseData);
   }
-  if (db) {
-    var col = db.collection('counts');
-    // Create a document with request IP and current time of request
-    col.insert({ip: req.ip, date: Date.now()});
-    col.count(function(err, count){
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
-    });
-  } else {
-    res.render('index.html', { pageCountMessage : null});
+  else{
+    responseMsg = JSON.stringify(responseHdr) +',' +JSON.stringify(rows);
   }
-});
-
-app.get('/pagecount', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    db.collection('counts').count(function(err, count ){
-      res.send('{ pageCount: ' + count + '}');
-    });
-  } else {
-    res.send('{ pageCount: -1 }');
-  }
-});
-
-// error handling
-app.use(function(err, req, res, next){
-  console.error(err.stack);
-  res.status(500).send('Something bad happened!');
-});
-
-initializeSocket();
-
-initDb(function(err){
-  console.log('Error connecting to Mongo. Message:\n'+err);
-});
-
-app.listen(port, ip);
-console.log('Server running on http://%s:%s', ip, port);
-
-module.exports = app ;
+  return responseMsg;
+}
