@@ -30,7 +30,7 @@ if (mysqlURL == null && process.env.DATABASE_SERVICE_NAME) {
   var mysqlHost = process.env[mysqlServiceName + '_SERVICE_HOST'],
       mysqlPort = process.env[mysqlServiceName + '_SERVICE_PORT'],
       mysqlDatabase = process.env[mysqlServiceName + '_DATABASE'],
-      mysqlPassword = process.env[mysqlServiceName + '_PASSWORD']
+      mysqlPassword = process.env[mysqlServiceName + '_PASSWORD'],
       mysqlUser = process.env[mysqlServiceName + '_USER'];
 
   if (mysqlHost && mysqlPort && mysqlDatabase) {
