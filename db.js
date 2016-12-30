@@ -32,6 +32,12 @@ var mysqlServiceName = process.env.DATABASE_SERVICE_NAME,
     mysqlPassword = process.env[mysqlServiceName + '_PASSWORD'],
     mysqlUser = process.env[mysqlServiceName + '_USER'];
 */
+console.log('Connection credentials:')
+console.log(process.env.OPENSHIFT_MYSQL_DB_HOST)
+console.log(process.env.OPENSHIFT_MYSQL_DB_USERNAME)
+console.log(process.env.OPENSHIFT_MYSQL_DB_PASSWORD)
+console.log(process.env.OPENSHIFT_MYSQL_DB_PORT)
+console.log(process.env.OPENSHIFT_APP_NAME)
 
 var connection = mysql.createConnection({
   host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
