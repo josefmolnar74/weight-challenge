@@ -118,12 +118,17 @@ Object.assign=require('object-assign')
         self.app = express();
         self.server = require('http').Server(self.app);
         self.io = require('socket.io')(self.server);
-        self.app.engine('html', require('ejs').renderFile);
-        self.app.use(morgan('combined'))
+
         //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
-        };
+//        for (var r in self.routes) {
+//            self.app.get(r, self.routes[r]);
+//        };
+
+        self.app.get('/', function(req,res){
+          res.setHeader('Content-Type', 'text/html');
+          res.send(fs.readFileSync('views/index_test.html'));
+        });
+
     };
 
     self.initializeSocket = function() {
