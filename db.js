@@ -32,11 +32,11 @@ var mysqlServiceName = process.env.DATABASE_SERVICE_NAME,
     mysqlUser = process.env[mysqlServiceName + '_USER'];
 */
 console.log('Connection credentials:')
-console.log(process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST)
-console.log('user1NQ')
-console.log('H0DD7ACsMkALGc4L')
-console.log(process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT)
-console.log(process.env.OPENSHIFT_BUILD_NAMESPACE)
+console.log('process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST=' +process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST)
+console.log('Username= '+'user1NQ')
+console.log('Password= '+'H0DD7ACsMkALGc4L')
+console.log('process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT= ' +process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT)
+console.log('process.env.OPENSHIFT_BUILD_NAMESPACE= ' +process.env.OPENSHIFT_BUILD_NAMESPACE)
 
 var connection = mysql.createConnection({
   host     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST,

@@ -28,10 +28,10 @@ var util = require('util');
         self.port      = process.env.OPENSHIFT_NODEJS_PORT || process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_PORT || 8080;
 
         console.log('[Josef] Setup variables')
-        console.log('process.env.IP=' +process.env.IP
-                    +', process.env.PORT='+process.env.PORT
-                    +', process.env.OPENSHIFT_NODEJS_IP='+process.env.OPENSHIFT_NODEJS_IP
+        console.log('process.env.OPENSHIFT_NODEJS_IP=' +process.env.OPENSHIFT_NODEJS_IP
+                    +', process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_ADDR='+process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_ADDR
                     +', process.env.OPENSHIFT_NODEJS_PORT='+process.env.OPENSHIFT_NODEJS_PORT
+                    +', process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_PORT='+process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_PORT
                     +', self.ipaddress='+self.ipaddress
                     +', self.port='+self.port)
 
