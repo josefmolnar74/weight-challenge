@@ -4,7 +4,7 @@ var express = require('express');
 var fs = require('fs');
 var assert = require('assert');
 var io = require('socket.io');
-//var db = require('./db.js');
+var db = require('./db.js');
 var controller = require('./controller/controller.js');
 
  /**
