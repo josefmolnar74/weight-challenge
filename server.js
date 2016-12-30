@@ -201,12 +201,11 @@ var controller = require('./controller/controller.js');
           self.initializeServer();
           // Create socket callbacks
           self.initializeSocket();
-
-          //Connect to mongodb database
-//          db.connect(db.MODE_PRODUCTION, function(err){
-//            console.log("[Josef] Connected to MySQL");
-//            if(err) throw err;
-//          });
+          //Connect to mySql database
+          db.connect(db.MODE_PRODUCTION, function(err){
+            console.log("[Josef] Connected to MySQL");
+            if(err) throw err;
+          });
     };
 
     /**
