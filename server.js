@@ -24,7 +24,7 @@ var util = require('util');
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP || process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_ADDR || '0.0.0.0';
+        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP || process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_ADDR || '127.0.0.1';
         self.port      = process.env.OPENSHIFT_NODEJS_PORT || process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_PORT || 8080;
 
         console.log('[Josef] Setup variables')
@@ -211,11 +211,11 @@ var util = require('util');
           // Create socket callbacks
           self.initializeSocket();
           //Connect to mySql database
-          db.connect(db.MODE_PRODUCTION, function(err){
+/*          db.connect(db.MODE_PRODUCTION, function(err){
             if(err) throw err;
             console.log("[Josef] Connected to MySQL");
           });
-    };
+*/    };
 
     /**
      *  Start the server (starts up the sample application).

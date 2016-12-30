@@ -37,13 +37,21 @@ console.log('Username= '+'user1NQ')
 console.log('Password= '+'H0DD7ACsMkALGc4L')
 console.log('process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT= ' +process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT)
 console.log('process.env.OPENSHIFT_BUILD_NAMESPACE= ' +process.env.OPENSHIFT_BUILD_NAMESPACE)
-
+/*
 var connection = mysql.createConnection({
   host     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST,
   user     : 'user1NQ',
   password : 'H0DD7ACsMkALGc4L',
   port     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT,
   database : process.env.OPENSHIFT_BUILD_NAMESPACE
+});
+*/
+var connection = mysql.createConnection({
+  host     : 'mysql-route-weight-challenge.44fs.preview.openshiftapps.com',
+  user     : 'user1NQ',
+  password : 'H0DD7ACsMkALGc4L',
+  port     : '3306',
+  database : 'weight_challenge'
 });
 
 /* Login credentials
