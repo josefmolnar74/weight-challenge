@@ -23,8 +23,8 @@ var controller = require('./controller/controller.js');
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-        self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
+        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP;
+        self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT;
         console.log('[Josef] Setup variables')
         console.log('process.env.IP=' +process.env.IP
                   +', process.env.PORT='+process.env.PORT
@@ -207,7 +207,7 @@ var controller = require('./controller/controller.js');
           // Create the express server and routes.
           self.initializeServer();
           // Create socket callbacks
-          self.initializeSocket();
+//          self.initializeSocket();
           //Connect to mySql database
           db.connect(db.MODE_PRODUCTION, function(err){
             if(err) throw err;
