@@ -41,10 +41,17 @@ console.log(process.env.OPENSHIFT_BUILD_NAMESPACE)
 var connection = mysql.createConnection({
   host     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST,
   user     : 'user1NQ',
-  password : 'H0DD7ACsMkALGc4L'
+  password : 'H0DD7ACsMkALGc4L',
   port     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT,
   database : process.env.OPENSHIFT_BUILD_NAMESPACE
 });
+
+/* Login credentials
+Username: user1NQ
+Password: H0DD7ACsMkALGc4L
+Database Name: weight_challenge
+Connection URL: mysql://mysql-weight-challenge:3306/
+*/
 
 /**
  *  Connect to mysql database.

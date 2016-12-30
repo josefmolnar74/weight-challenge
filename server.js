@@ -34,7 +34,7 @@ var util = require('util');
                     +', process.env.OPENSHIFT_NODEJS_PORT='+process.env.OPENSHIFT_NODEJS_PORT
                     +', self.ipaddress='+self.ipaddress
                     +', self.port='+self.port)
-                    
+
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
@@ -239,7 +239,7 @@ var util = require('util');
  */
 var weigthApp = new WeightApp();
 console.log('[Josef] Node JS application created')
-console.log(util.inspect(process.env));
+//console.log(util.inspect(process.env));
 weigthApp.initialize();
 weigthApp.start();
 
