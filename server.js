@@ -6,6 +6,7 @@ var assert = require('assert');
 var io = require('socket.io');
 var db = require('./db.js');
 var controller = require('./controller/controller.js');
+var util = require('util');
 
  /**
  *  Define the Weigth application.
