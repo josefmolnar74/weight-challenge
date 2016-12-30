@@ -23,8 +23,15 @@ var controller = require('./controller/controller.js');
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
         self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
+        console.log('[Josef] Setup variables')
+        console.log('process.env.IP=' +process.env.IP
+                  +', process.env.PORT='+process.env.PORT
+                  +', process.env.OPENSHIFT_NODEJS_IP='+process.env.OPENSHIFT_NODEJS_IP
+                  +', process.env.OPENSHIFT_NODEJS_PORT='+process.env.OPENSHIFT_NODEJS_PORT
+                  +', self.ipaddress='+self.ipaddress
+                  +', self.port='+self.port)
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
