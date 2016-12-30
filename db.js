@@ -30,12 +30,19 @@ var DB_DATABASE = process.env.OPENSHIFT_MYSQL_DB_DATABASE || 'weight_challenge'
 var mysqlURL = process.env.OPENSHIFT_MYSQL_DB_URL || process.env.MYSQL_URL,
     mysqlURLLabel = "";
 
-var mysqlServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
+var mysqlServiceName = process.env.DATABASE_SERVICE_NAME,
     mysqlHost = process.env[mysqlServiceName + '_SERVICE_HOST'],
     mysqlPort = process.env[mysqlServiceName + '_SERVICE_PORT'],
     mysqlDatabase = process.env[mysqlServiceName + '_DATABASE'],
-    mysqlPassword = process.env[mysqlServiceName + '_PASSWORD']
+    mysqlPassword = process.env[mysqlServiceName + '_PASSWORD'],
     mysqlUser = process.env[mysqlServiceName + '_USER'];
+
+console.log('[josef] MySql credentials:'+' ' +mysqlServiceName
+                                      +', ' +mysqlHost
+                                      +', ' +mysqlPort
+                                      +', ' +mysqlDatabase
+                                      +', ' +mysqlPassword
+                                      +', ' +mysqlUser);
 
 var connection = mysql.createConnection({
   host     : mysqlHost,
@@ -49,7 +56,6 @@ var connection = mysql.createConnection({
  */
 exports.connect = function (mode, done) {
       console.log('[josef] connect to mysql database');
-      console.log('[josef] Connection credentials:' +' ' +DB_HOST +', ' +DB_USERNAME +', ' +DB_USERPASSWORD +', ' +DB_DATABASE);
 
       connection.connect(function(err) {
         if (err) {
