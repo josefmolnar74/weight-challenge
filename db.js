@@ -38,6 +38,7 @@ var connection = mysql.createConnection({
  */
 exports.connect = function (mode, done) {
       console.log('[josef] connect to mysql database');
+      console.log('[josef] Connection credentials:' +' ' +DB_HOST +', ' +DB_USERNAME +', ' +DB_USERPASSWORD +', ' +DB_DATABASE);
 
       connection.connect(function(err) {
         if (err) {

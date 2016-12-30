@@ -203,8 +203,8 @@ var controller = require('./controller/controller.js');
           self.initializeSocket();
           //Connect to mySql database
           db.connect(db.MODE_PRODUCTION, function(err){
-            console.log("[Josef] Connected to MySQL");
             if(err) throw err;
+            console.log("[Josef] Connected to MySQL");
           });
     };
 
