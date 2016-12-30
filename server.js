@@ -200,7 +200,7 @@ var controller = require('./controller/controller.js');
           // Create the express server and routes.
           self.initializeServer();
           // Create socket callbacks
-//          self.initializeSocket();
+          self.initializeSocket();
 
           //Connect to mongodb database
 //          db.connect(db.MODE_PRODUCTION, function(err){
