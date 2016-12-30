@@ -26,6 +26,7 @@ Object.assign=require('object-assign')
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
+        console.log('[Josef] Setup environment variables');
         self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP   || '127.0.0.1';
         self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
@@ -98,6 +99,7 @@ Object.assign=require('object-assign')
      */
      //Här sätter jag upp metoder för interaktion med
     self.createRoutes = function() {
+        console.log('[Josef] Create routes');
         self.routes = { };
 
         self.routes['/'] = function(req, res) {
@@ -111,6 +113,7 @@ Object.assign=require('object-assign')
      *  the handlers.
      */
     self.initializeServer = function() {
+        console.log('[Josef] Initialize server');
         self.createRoutes();
         self.app = express();
         self.server = require('http').Server(self.app);
@@ -124,7 +127,7 @@ Object.assign=require('object-assign')
     };
 
     self.initializeSocket = function() {
-
+        console.log('[Josef] Initialize socket');
         self.io.on('connection', function(socket){//Add socket
             console.log("[Josef] a user connected: " +socket.id);
             socket.emit('welcome', JSON.stringify({ message: 'Welcome! to Josef server', id: socket.id }));
@@ -211,6 +214,7 @@ Object.assign=require('object-assign')
      *  Initializes the sample application.
      */
     self.initialize = function() {
+          console.log('[Josef] Initialize');
           self.setupVariables();
           self.populateCache();
           self.setupTerminationHandlers();
@@ -225,7 +229,7 @@ Object.assign=require('object-assign')
      *  Start the server (starts up the sample application).
      */
     self.start = function() {
-
+        console.log('[Josef] Start application');
         //  Start the app on the specific interface (and port).
          self.server.listen(self.port, self.ipaddress, function() {
             console.log('%s: Node server started on %s:%d ...',
