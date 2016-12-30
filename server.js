@@ -5,6 +5,9 @@ var fs = require('fs');
 var assert = require('assert');
 var io = require('socket.io');
 var controller = require('./controller/controller.js');
+var morgan = require('morgan');
+
+Object.assign=require('object-assign')
 
  /**
  *  Define the sample application.
@@ -23,8 +26,8 @@ var controller = require('./controller/controller.js');
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-        self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8084;
+        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP   || '127.0.0.1';
+        self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
@@ -101,31 +104,6 @@ var controller = require('./controller/controller.js');
             res.setHeader('Content-Type', 'text/html');
             res.send(self.cache_get('index.html') );
         };
-
-        self.routes['/create'] = function(req, res) {
-            console.log("[CME] create from")
-            res.setHeader('Content-Type', 'text/html');
-            res.send('[CME] create ' );
-        };
-
-        self.routes['/read'] = function(req, res) {
-          console.log("[CME] read from")
-          res.setHeader('Content-Type', 'text/html');
-          res.send('[CME] read ' );
-        };
-
-        self.routes['/update'] = function(req, res) {
-          console.log("[CME] create from")
-          res.setHeader('Content-Type', 'text/html');
-          res.send('[CME] update ' );
-        };
-
-        self.routes['/delete'] = function(req, res) {
-          console.log("[CME] create from")
-          res.setHeader('Content-Type', 'text/html');
-          res.send('[CME] delete ' );
-        };
-
     };
 
     /**
@@ -137,7 +115,8 @@ var controller = require('./controller/controller.js');
         self.app = express();
         self.server = require('http').Server(self.app);
         self.io = require('socket.io')(self.server);
-
+        self.app.engine('html', require('ejs').renderFile);
+        self.app.use(morgan('combined'))
         //  Add handlers for the app (from the routes).
         for (var r in self.routes) {
             self.app.get(r, self.routes[r]);
@@ -215,15 +194,6 @@ var controller = require('./controller/controller.js');
               });
             });
 
-/*            socket.on('mail', function(data){
-                var errorCode = "";
-                console.log("[CME] Client login request");
-                controller.send(data,
-                function(err){
-                    if(err) throw err;
-                });
-            });
-*/
             socket.on('disconnect', function(){
               console.log("[CME] Client disconnected")});
         });
@@ -244,10 +214,8 @@ var controller = require('./controller/controller.js');
           self.setupVariables();
           self.populateCache();
           self.setupTerminationHandlers();
-
           // Create the express server and routes.
           self.initializeServer();
-
           // Create socket callbacks
           self.initializeSocket();
 
