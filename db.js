@@ -20,29 +20,28 @@ if(process.env.OPENSHIFT_MYSQL_DB_PASSWORD){
   connectionString += 'admin2DlLfX8:SsmT4aGI5fyQ@' +'127.0.0.1:27017' +'/cancermeapp';
 }
 */
-/*
-var DB_HOST =  process.env.OPENSHIFT_MYSQL_DB_HOST || 'localhost'
-var DB_USERNAME = process.env.OPENSHIFT_MYSQL_DB_USERNAME || 'user1NQ'
-var DB_USERPASSWORD = process.env.OPENSHIFT_MYSQL_DB_PASSWORD || 'H0DD7ACsMkALGc4L'
-var DB_DATABASE = process.env.OPENSHIFT_MYSQL_DB_DATABASE || 'weight_challenge'
-*/
 
+/*
 var mysqlURL = process.env.OPENSHIFT_MYSQL_DB_URL || process.env.MYSQL_URL,
     mysqlURLLabel = "";
 
 var mysqlServiceName = process.env.DATABASE_SERVICE_NAME,
-    mysqlHost = process.env[mysqlServiceName + '_SERVICE_HOST'],
+    mysqlHost = process.env.DATABASE_SERVICE_NAME + '_SERVICE_HOST'],
     mysqlPort = process.env[mysqlServiceName + '_SERVICE_PORT'],
     mysqlDatabase = process.env[mysqlServiceName + '_DATABASE'],
     mysqlPassword = process.env[mysqlServiceName + '_PASSWORD'],
     mysqlUser = process.env[mysqlServiceName + '_USER'];
+*/
 
-console.log('[josef] MySql credentials:'+' ' +mysqlServiceName
-                                      +', ' +mysqlHost
-                                      +', ' +mysqlPort
-                                      +', ' +mysqlDatabase
-                                      +', ' +mysqlPassword
-                                      +', ' +mysqlUser);
+var mysqlHost =  process.env.OPENSHIFT_MYSQL_DB_HOST, //|| 'localhost'
+    mysqlUser = process.env.OPENSHIFT_MYSQL_DB_USERNAME, //|| 'user1NQ'
+    mysqlPassword = process.env.OPENSHIFT_MYSQL_DB_PASSWORD, //|| 'H0DD7ACsMkALGc4L'
+    mysqlDatabase = process.env.OPENSHIFT_MYSQL_DB_DATABASE; //|| 'weight_challenge'
+
+console.log('[josef] MySql credentials:'+', ' +mysqlHost
+                                        +', ' +mysqlUser
+                                        +', ' +mysqlPassword
+                                        +', ' +mysqlDatabase);
 
 var connection = mysql.createConnection({
   host     : mysqlHost,
