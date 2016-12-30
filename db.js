@@ -1,5 +1,4 @@
 var mysql = require('mysql');
-//  , async = require('async')
 
 var PRODUCTION_DB = 'weight_challenge'
 //  , TEST_DB = 'app_test_database'

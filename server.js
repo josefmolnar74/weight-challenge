@@ -23,15 +23,8 @@ var controller = require('./controller/controller.js');
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP;
-        self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT;
-        console.log('[Josef] Setup variables')
-        console.log('process.env.IP=' +process.env.IP
-                  +', process.env.PORT='+process.env.PORT
-                  +', process.env.OPENSHIFT_NODEJS_IP='+process.env.OPENSHIFT_NODEJS_IP
-                  +', process.env.OPENSHIFT_NODEJS_PORT='+process.env.OPENSHIFT_NODEJS_PORT
-                  +', self.ipaddress='+self.ipaddress
-                  +', self.port='+self.port)
+        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+        self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
@@ -207,7 +200,7 @@ var controller = require('./controller/controller.js');
           // Create the express server and routes.
           self.initializeServer();
           // Create socket callbacks
-//          self.initializeSocket();
+          self.initializeSocket();
           //Connect to mySql database
           db.connect(db.MODE_PRODUCTION, function(err){
             if(err) throw err;
@@ -236,6 +229,8 @@ var controller = require('./controller/controller.js');
  *  main():  Main code.
  */
 var weigthApp = new WeightApp();
+console.log('[Josef] Node JS application created')
+console.log(util.inspect(process.env));
 weigthApp.initialize();
 weigthApp.start();
 
