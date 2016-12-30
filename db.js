@@ -49,7 +49,8 @@ var connection = mysql.createConnection({
   user     : mysqlUser,
   password : mysqlPassword,
   port     : mysqlPort,
-  database : mysqlDatabase
+  database : mysqlDatabase,
+  socketPath: 'mysql-socket-path'
 });
 
 /* Login credentials
