@@ -20,38 +20,36 @@ if(process.env.OPENSHIFT_MYSQL_DB_PASSWORD){
 }
 */
 
-/*
 var mysqlURL = process.env.OPENSHIFT_MYSQL_DB_URL || process.env.MYSQL_URL,
     mysqlURLLabel = "";
 
-var mysqlServiceName = process.env.DATABASE_SERVICE_NAME,
-    mysqlHost = process.env.DATABASE_SERVICE_NAME + '_SERVICE_HOST'],
-    mysqlPort = process.env[mysqlServiceName + '_SERVICE_PORT'],
-    mysqlDatabase = process.env[mysqlServiceName + '_DATABASE'],
-    mysqlPassword = process.env[mysqlServiceName + '_PASSWORD'],
-    mysqlUser = process.env[mysqlServiceName + '_USER'];
-*/
-console.log('Connection credentials:')
-console.log('process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST=' +process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST)
-console.log('Username= '+'user1NQ')
-console.log('Password= '+'H0DD7ACsMkALGc4L')
-console.log('process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT= ' +process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT)
-console.log('process.env.OPENSHIFT_BUILD_NAMESPACE= ' +process.env.OPENSHIFT_BUILD_NAMESPACE)
-/*
+if (mysqlURL == null && process.env.DATABASE_SERVICE_NAME) {
+  var mysqlServiceName = process.env.DATABASE_SERVICE_NAME;
+  mysqlServiceName = mysqlServiceName.toUpperCase();
+
+  var mysqlHost = process.env[mysqlServiceName + '_SERVICE_HOST'],
+      mysqlPort = process.env[mysqlServiceName + '_SERVICE_PORT'],
+      mysqlDatabase = process.env[mysqlServiceName + '_DATABASE'],
+      mysqlPassword = process.env[mysqlServiceName + '_PASSWORD']
+      mysqlUser = process.env[mysqlServiceName + '_USER'];
+
+  if (mysqlHost && mysqlPort && mysqlDatabase) {
+    mysqlURLLabel = mysqlURL = 'mysqldb://';
+    if (mysqlUser && mysqlPassword) {
+      mysqlURL += mysqlUser + ':' + mysqlPassword + '@';
+    }
+    // Provide UI label that excludes user id and pw
+    mysqlURLLabel += mysqlHost + ':' + mysqlPort + '/' + mysqlDatabase;
+    mysqlURL += mysqlHost + ':' +  mysqlPort + '/' + mysqlDatabase;
+  }
+}
+
 var connection = mysql.createConnection({
-  host     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST,
-  user     : 'user1NQ',
-  password : 'H0DD7ACsMkALGc4L',
-  port     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT,
-  database : process.env.OPENSHIFT_BUILD_NAMESPACE
-});
-*/
-var connection = mysql.createConnection({
-  host     : 'mysql-route-weight-challenge.44fs.preview.openshiftapps.com',
-  user     : 'user1NQ',
-  password : 'H0DD7ACsMkALGc4L',
-  port     : '3306',
-  database : 'weight_challenge'
+  host     : mysqlHost,
+  user     : mysqlUser,
+  password : mysqlPassword,
+  port     : mysqlPort,
+  database : mysqlDatabase
 });
 
 /* Login credentials

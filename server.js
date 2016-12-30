@@ -216,11 +216,11 @@ var util = require('util');
           // Create socket callbacks
           self.initializeSocket();
           //Connect to mySql database
-/*          db.connect(db.MODE_PRODUCTION, function(err){
+          db.connect(db.MODE_PRODUCTION, function(err){
             if(err) throw err;
             console.log("[Josef] Connected to MySQL");
           });
-*/    };
+    };
 
     /**
      *  Start the server (starts up the sample application).
