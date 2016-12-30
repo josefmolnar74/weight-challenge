@@ -127,6 +127,19 @@ var util = require('util');
             console.log("[Josef] a user connected: " +socket.id);
             socket.emit('welcome', JSON.stringify({ message: 'Welcome! to Josef server', id: socket.id }));
 
+            socket.on('login', function(data){
+              var errorCode = "";
+              console.log("[CME] Client login request");
+              controller.checkLogin(data, function(err, rows){
+                if(err) throw err;
+                console.log(rows)
+                if ((rows === null) || (rows === undefined)) errorCode = "login_failed";
+                var dataMsg = JSON.stringify(createHdrJsonObject(data, errorCode)) +',' +JSON.stringify(rows);
+                console.log('[CME] send data message =' +dataMsg)
+                socket.emit('data', dataMsg);
+              });
+            });
+
             socket.on('read', function(data){
               var errorCode = "";
               console.log('[Josef] Recieved get '+data);
