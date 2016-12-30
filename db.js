@@ -32,18 +32,18 @@ var mysqlServiceName = process.env.DATABASE_SERVICE_NAME,
     mysqlUser = process.env[mysqlServiceName + '_USER'];
 */
 console.log('Connection credentials:')
-console.log(process.env.OPENSHIFT_MYSQL_DB_HOST)
-console.log(process.env.OPENSHIFT_MYSQL_DB_USERNAME)
-console.log(process.env.OPENSHIFT_MYSQL_DB_PASSWORD)
-console.log(process.env.OPENSHIFT_MYSQL_DB_PORT)
-console.log(process.env.OPENSHIFT_APP_NAME)
+console.log(process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST)
+console.log('user1NQ')
+console.log('H0DD7ACsMkALGc4L')
+console.log(process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT)
+console.log(process.env.OPENSHIFT_BUILD_NAMESPACE)
 
 var connection = mysql.createConnection({
-  host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
-  user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
-  password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
-  port     : process.env.OPENSHIFT_MYSQL_DB_PORT,
-  database : process.env.OPENSHIFT_APP_NAME
+  host     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_HOST,
+  user     : 'user1NQ',
+  password : 'H0DD7ACsMkALGc4L'
+  port     : process.env.MYSQL_WEIGHT_CHALLENGE_SERVICE_PORT,
+  database : process.env.OPENSHIFT_BUILD_NAMESPACE
 });
 
 /**

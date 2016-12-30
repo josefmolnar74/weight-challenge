@@ -24,9 +24,17 @@ var util = require('util');
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
-        self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
+        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP || process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_ADDR || '0.0.0.0';
+        self.port      = process.env.OPENSHIFT_NODEJS_PORT || process.env.NODEJS_WEIGHT_CHALLENGE_PORT_8080_TCP_PORT || 8080;
 
+        console.log('[Josef] Setup variables')
+        console.log('process.env.IP=' +process.env.IP
+                    +', process.env.PORT='+process.env.PORT
+                    +', process.env.OPENSHIFT_NODEJS_IP='+process.env.OPENSHIFT_NODEJS_IP
+                    +', process.env.OPENSHIFT_NODEJS_PORT='+process.env.OPENSHIFT_NODEJS_PORT
+                    +', self.ipaddress='+self.ipaddress
+                    +', self.port='+self.port)
+                    
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
