@@ -216,10 +216,10 @@ var util = require('util');
           // Create socket callbacks
           self.initializeSocket();
           //Connect to mySql database
-          db.connect(db.MODE_PRODUCTION, function(err){
-            if(err) throw err;
-            console.log("[Josef] Connected to MySQL");
-          });
+//          db.connect(db.MODE_PRODUCTION, function(err){
+//            if(err) throw err;
+//            console.log("[Josef] Connected to MySQL");
+//          });
     };
 
     /**
@@ -244,7 +244,7 @@ var util = require('util');
  */
 var weigthApp = new WeightApp();
 console.log('[Josef] Node JS application created')
-console.log(util.inspect(process.env));
+//console.log(util.inspect(process.env));
 weigthApp.initialize();
 weigthApp.start();
 
