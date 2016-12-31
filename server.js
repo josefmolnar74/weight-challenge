@@ -244,7 +244,7 @@ var util = require('util');
  */
 var weigthApp = new WeightApp();
 console.log('[Josef] Node JS application created')
-//console.log(util.inspect(process.env));
+console.log(util.inspect(process.env));
 weigthApp.initialize();
 weigthApp.start();
 
