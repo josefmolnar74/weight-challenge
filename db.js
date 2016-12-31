@@ -59,7 +59,7 @@ var connection = mysql.createConnection({
   user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
   password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
   port     : process.env.OPENSHIFT_MYSQL_DB_PORT,
-  database : process.env.OPENSHIFT_APP_NAME
+  database : process.env.OPENSHIFT_MYSQL_DB_DATABASE
  });
 
 /* Login credentials
