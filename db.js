@@ -76,7 +76,8 @@ var connection = mysql.createConnection({
   user     : DB_USERNAME,
   password : DB_USERPASSWORD,
 //  database: mode === exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
-  database : DB_DATABASE
+  database : DB_DATABASE,
+  socket : '/var/lib/mysql/mysql.sock'
 });
 /*
 var connection = mysql.createConnection({
