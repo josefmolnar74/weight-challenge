@@ -44,7 +44,6 @@ if (mysqlURL == null && process.env.DATABASE_SERVICE_NAME) {
   }
 }
 
-/*
 var connection = mysql.createConnection({
   host     : mysqlHost,
   user     : mysqlUser,
@@ -52,8 +51,9 @@ var connection = mysql.createConnection({
   port     : mysqlPort,
   database : mysqlDatabase,
 });
-*/
 
+
+/*
  var connection = mysql.createConnection({
   host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
   user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
@@ -61,12 +61,6 @@ var connection = mysql.createConnection({
   port     : process.env.OPENSHIFT_MYSQL_DB_PORT,
   database : process.env.OPENSHIFT_MYSQL_DB_DATABASE
  });
-
-/* Login credentials
-Username: user1NQ
-Password: H0DD7ACsMkALGc4L
-Database Name: weight_challenge
-Connection URL: mysql://mysql-weight-challenge:3306/
 */
 
 /**
