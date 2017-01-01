@@ -23,84 +23,84 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){//Add socket
-    console.log("[Josef] a user connected: " +socket.id);
-    socket.emit('welcome', JSON.stringify({ message: 'Welcome! to Josef server', id: socket.id }));
+    console.log("[JOSEF] a user connected: " +socket.id);
+    socket.emit('welcome', JSON.stringify({ message: 'Welcome! to JOSEF server', id: socket.id }));
 
     socket.on('login', function(data){
       var errorCode = "";
-      console.log("[CME] Client login request");
+      console.log("[JOSEF] Client login request");
       controller.checkLogin(data, function(err, rows){
         if(err) throw err;
         console.log(rows)
         if ((rows === null) || (rows === undefined)) errorCode = "login_failed";
         var dataMsg = JSON.stringify(createHdrJsonObject(data, errorCode)) +',' +JSON.stringify(rows);
-        console.log('[CME] send data message =' +dataMsg)
+        console.log('[JOSEF] send data message =' +dataMsg)
         socket.emit('data', dataMsg);
       });
     });
 
     socket.on('read', function(data){
       var errorCode = "";
-      console.log('[Josef] Recieved get '+data);
+      console.log('[JOSEF] Recieved get '+data);
       controller.read(data, function(err, rows){
         if(err) throw err;
-        console.log('[Josef] show rows result ')
+        console.log('[JOSEF] show rows result ')
         if ((rows === null) || (rows === undefined)) errorCode = "not_found";
         var responseHdr = createHdrJsonObject(data, errorCode);
         var responseMsg = createMsgJsonString(rows, responseHdr);
-        console.log('[Josef] send data message =' +responseMsg)
+        console.log('[JOSEF] send data message =' +responseMsg)
         socket.emit('data', responseMsg);
       });
     });
 
     socket.on('create', function(data){
       var errorCode = "";
-      console.log('[Josef] Recieved create '+data);
+      console.log('[JOSEF] Recieved create '+data);
       controller.create(data, function(err, rows){
         if(err) throw err;
         if ((rows === null) || (rows === undefined)) errorCode = "already_exists";
         var responseHdr = createHdrJsonObject(data, errorCode);
         var responseMsg = createMsgJsonString(rows, responseHdr);
-        console.log('[Josef] send data message =' +responseMsg)
+        console.log('[JOSEF] send data message =' +responseMsg)
         socket.emit('data', responseMsg);
       });
     });
 
     socket.on('delete', function(data){
       var errorCode = "";
-      console.log('[Josef] Recieved delete '+data);
+      console.log('[JOSEF] Recieved delete '+data);
       controller.delete(data, function(err, rows){
         if(err) throw err;
         var responseHdr = createHdrJsonObject(data, errorCode);
         var responseMsg = createMsgJsonString(rows, responseHdr);
-        console.log('[Josef] send data message =' +responseMsg)
+        console.log('[JOSEF] send data message =' +responseMsg)
         socket.emit('data', responseMsg);
       });
     });
 
     socket.on('update', function(data){
       var errorCode = "";
-      console.log('[Josef] Recieved update '+data);
+      console.log('[JOSEF] Recieved update '+data);
       controller.update(data, function(err, rows){
         if(err) throw err;
         var responseHdr = createHdrJsonObject(data, errorCode);
         var responseMsg = createMsgJsonString(rows, responseHdr);
-        console.log('[Josef] send data message =' +responseMsg)
+        console.log('[JOSEF] send data message =' +responseMsg)
         socket.emit('data', responseMsg);
       });
     });
 
     socket.on('disconnect', function(){
-      console.log("[Josef] Client disconnected")});
+      console.log("[JOSEF] Client disconnected")});
 });
 
 io.on('data', function(data) {
-    console.log('[Josef] Data recieved');
+    console.log('[JOSEF] Data recieved');
     console.log(data);
 });
 
 io.on('disconnect', function(data) {
-    console.log("[Josef] Client disconnected 2");
+    console.log("[JOSEF] Client disconnected 2");
 });
 
 http.listen(app.get('port'), function() {
@@ -112,7 +112,7 @@ function createHdrJsonObject(data, error){
                         function: JSON.parse(data).function,
                         content: JSON.parse(data).content,
                         errorCode: error};
-  console.log('[Josef] create responseHeader')
+  console.log('[JOSEF] create responseHeader')
   console.log(responseHeader)
   return responseHeader;
 }
