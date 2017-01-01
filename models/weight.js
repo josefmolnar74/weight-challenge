@@ -3,7 +3,7 @@ var pg = require('pg');
 var async = require('async');
 
 exports.create = function(object, callback) {
-  var values = [object.person_ID, object.weight, object.date];
+  var values = [object.person_id, object.weight, object.date];
   console.log("[JOSEF] Create weight with data = " + values)
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     if (err){
@@ -12,7 +12,7 @@ exports.create = function(object, callback) {
       console.log(err);
       return callback(err);
     }
-    client.query('INSERT INTO weight (person_ID, weight, date) VALUES($1, $2, $3)', values, function (err, result) {
+    client.query('INSERT INTO weight (person_id, weight, date) VALUES($1, $2, $3)', values, function (err, result) {
       console.log('[JOSEF] pg connect success');
       done()
       if (err){
@@ -27,8 +27,8 @@ exports.create = function(object, callback) {
 
 var createHealthdata = function(object, callback){
   console.log("[CME] createHealthdata ")
-  var values = [object.patient_ID, object.person_ID, object.date, object.time, object.type, object.value];
-  db.get().query('INSERT INTO healthdata (patient_ID, person_ID, date, time, type, value) VALUES(?, ?, ?, ?, ?, ?)', values,
+  var values = [object.patient_ID, object.person_id, object.date, object.time, object.type, object.value];
+  db.get().query('INSERT INTO healthdata (patient_ID, person_id, date, time, type, value) VALUES(?, ?, ?, ?, ?, ?)', values,
   function (err, result) {
     if (err) return callback(err);
     var resultObject = {healthdata_ID: result.insertId};
@@ -74,8 +74,8 @@ exports.update = function(object, callback) {
 
 updateHealthdata = function(object, callback) {
   console.log('[CME] updateHealthdata, healthdata_ID = '+object.healthdata_ID)
-  var values = [object.patient_ID, object.person_ID, object.date, object.time, object.type, object.value, object.healthdata_ID];
-  db.get().query('UPDATE healthdata SET patient_ID=?, person_ID=?, date=?, time=?, type=?, value=? WHERE healthdata_ID = ?', values,
+  var values = [object.patient_ID, object.person_id, object.date, object.time, object.type, object.value, object.healthdata_ID];
+  db.get().query('UPDATE healthdata SET patient_ID=?, person_id=?, date=?, time=?, type=?, value=? WHERE healthdata_ID = ?', values,
   function(err, result) {
     if (err) return callback(err)
     callback(null, object);

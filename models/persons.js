@@ -38,8 +38,8 @@ exports.create = function(object, callback) {
 }
 
 exports.getPerson = function(object, callback) {
-  if (object.person_ID != null){
-    console.log('[JOSEF] persons.get with person_ID = ', object.person_ID)
+  if (object.person_id != null){
+    console.log('[JOSEF] persons.get with person_id = ', object.person_id)
     async.waterfall([
       async.apply(findUserWithID, object)
     ],
@@ -47,7 +47,7 @@ exports.getPerson = function(object, callback) {
       if (err) return callback(err);
       callback(null, result);
     })
-    db.get().query('SELECT * FROM persons WHERE person_ID = ?', object.person_ID, function(err, rows) {
+    db.get().query('SELECT * FROM persons WHERE person_id = ?', object.person_id, function(err, rows) {
       if (err) throw err;
       callback(null, rows)
     });
@@ -69,8 +69,8 @@ exports.update = function(object, callback) {
   if (object.password != null){
     // update person data
     console.log('[JOSEF] persons.update person data')
-    var values = [object.name, object.email, object.avatar, object.person_ID];
-    db.get().query('UPDATE persons SET name=?, email=?, avatar=? WHERE person_ID=?', values,
+    var values = [object.name, object.email, object.avatar, object.person_id];
+    db.get().query('UPDATE persons SET name=?, email=?, avatar=? WHERE person_id=?', values,
     function(err, result) {
       if (err) return callback(err)
       callback(null, result.insertId);
@@ -78,8 +78,8 @@ exports.update = function(object, callback) {
   } else{
     // update password
     console.log('[JOSEF] persons.update password')
-    var values = [object.password, object.person_ID];
-    db.get().query('UPDATE persons SET password=? WHERE person_ID=?', values,
+    var values = [object.password, object.person_id];
+    db.get().query('UPDATE persons SET password=? WHERE person_id=?', values,
     function(err, result) {
       if (err) return callback(err)
       callback(null, result.insertId);
@@ -87,11 +87,11 @@ exports.update = function(object, callback) {
   }
 };
 
-exports.delete = function(person_ID, callback) {
+exports.delete = function(person_id, callback) {
   console.log('[JOSEF] persons.delete');
   async.waterfall([
-    async.apply(deleteRelationships, person_ID),
-    async.apply(deletePerson, person_ID)
+    async.apply(deleteRelationships, person_id),
+    async.apply(deletePerson, person_id)
   ],
   function(err, result){
     if (err) return callback(err);
@@ -99,18 +99,18 @@ exports.delete = function(person_ID, callback) {
   })
 };
 
-var deleteRelationships = function(person_ID, callback){
-  console.log("[JOSEF] deleteRelationships for user " + person_ID);
-  db.get().query('DELETE FROM persons_patients_junction WHERE person_ID = ?', person_ID, function(err, result) {
+var deleteRelationships = function(person_id, callback){
+  console.log("[JOSEF] deleteRelationships for user " + person_id);
+  db.get().query('DELETE FROM persons_patients_junction WHERE person_id = ?', person_id, function(err, result) {
     if (err) return callback(err);
-    console.log("[JOSEF] relationships deleted for user " +person_ID);
+    console.log("[JOSEF] relationships deleted for user " +person_id);
     callback(null, result);
   });
 }
 
-var deletePerson = function(person_ID, result, callback){
-  console.log("[JOSEF] deletePerson for user " + person_ID);
-  db.get().query('DELETE FROM persons WHERE person_ID = ?', person_ID, function(err, result) {
+var deletePerson = function(person_id, result, callback){
+  console.log("[JOSEF] deletePerson for user " + person_id);
+  db.get().query('DELETE FROM persons WHERE person_id = ?', person_id, function(err, result) {
     if (err) return callback(err);
     console.log("[JOSEF] person deleted");
     callback(null, result);
