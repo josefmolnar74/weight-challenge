@@ -44,9 +44,9 @@ exports.get = function(object,callback){
 var getWeightData = function(object, callback) {
   console.log('[JOSEF] getWeightData')
   if (object.weight_id != null){
-    getOneWeightData((object.weight_id, callback)
+    getOneWeightData(object.weight_id, callback)
   } else if (object.person_ID != null){
-    getPersonWeightData((object.person_ID, callback)
+    getPersonWeightData(object.person_ID, callback)
   } else console.log('[JOSEF] something wrong no getHealthdata db query')
 };
 
