@@ -5,7 +5,7 @@ var async = require('async');
 exports.checkLoginData = function(email, password, callback) {
   console.log("[JOSEF] checkLoginData, find email and password " + email + " " +password)
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    client.query('SELECT * FROM persons WHERE email = ? and password = ? ', [email, password], function(err, rows) {
+    client.query('SELECT * FROM persons WHERE email = ? and password = ?', [email, password], function(err, rows) {
       if (err) return callback(err);
       console.log("[CME] findUser callback "+JSON.stringify(rows))
       callback(null, rows[0]);
@@ -14,19 +14,32 @@ exports.checkLoginData = function(email, password, callback) {
 }
 
 exports.create = function(object, callback) {
+  var values = [object.name, object.email, object.password, object.height];
+  console.log("[JOSEF] create person " + values)
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query('INSERT INTO persons (name, email, password, height) VALUES(?, ?, ?, ?)', values,
+    function (err, result) {
+      if (err) return callback(err);
+      console.log("[JOSEF] user created with ID " +result.insertId)
+      callback(null, result.insertId);
+    });
+  });
+}
+
+/*
+exports.create = function(object, callback) {
   console.log('[CME] persons.create');
   async.waterfall([
     async.apply(findUserWithEmail, object),
     async.apply(createUser, object),
     async.apply(buildResultData)
-//    async.apply(addToCareTeam, object.patient_ID, object.relationship, object.admin)
   ],
   function(err, result){
     if (err) return callback(err);
     callback(null, result);
   })
 };
-
+*/
 var findUserWithEmail = function(object, callback){
   console.log("[CME] findUserWithEmail with email = " + object.email)
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
