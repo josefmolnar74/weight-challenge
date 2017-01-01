@@ -4,7 +4,8 @@ var async = require('async');
 
 exports.checkLoginData = function(email, password, callback) {
   console.log("[JOSEF] checkLoginData, find email and password " + email + " " +password)
-  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+  pg.connect(process.env.DATABASE_URL, function(err, client, callback) {
+    if(err) return callback(err);
     client.query('SELECT * FROM persons WHERE email = ? and password = ?', [email, password], function(err, rows) {
       if (err) return callback(err);
       console.log("[JOSEF] findUser callback "+JSON.stringify(rows))
@@ -15,8 +16,9 @@ exports.checkLoginData = function(email, password, callback) {
 
 exports.create = function(object, callback) {
   var values = [object.name, object.email, object.password, object.height];
-  console.log("[JOSEF] create person " + values)
-  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+  console.log("[JOSEF] Create person " + values)
+  pg.connect(process.env.DATABASE_URL, function(err, client, callback) {
+    if (err) return callback(err);
     client.query('INSERT INTO persons (name, email, password, height) VALUES(?, ?, ?, ?)', values,
     function (err, result) {
       if (err) return callback(err);
