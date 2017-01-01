@@ -32,7 +32,8 @@ var createWeightData = function(object, callback) {
       } return callback(err);
       console.log('[JOSEF] client query success');
       console.log("[JOSEF] user created with ID " +result.insertId)
-      callback(null, result.insertId);
+      var resultObject = {weight_ID: result.insertId};
+      callback(null, resultObject);
     });
   });
 }
@@ -45,8 +46,8 @@ var getWeightData = function(object, callback) {
   console.log('[JOSEF] getWeightData')
   if (object.weight_id != null){
     getOneWeightData(object.weight_id, callback)
-  } else if (object.person_ID != null){
-    getPersonWeightData(object.person_ID, callback)
+  } else if (object.person_id != null){
+    getPersonWeightData(object.person_id, callback)
   } else console.log('[JOSEF] getWeightData something wrong')
 };
 
