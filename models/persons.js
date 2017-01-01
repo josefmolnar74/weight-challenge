@@ -17,10 +17,11 @@ exports.checkLoginData = function(email, password, callback) {
 exports.create = function(object, callback) {
   var values = [object.name, object.email, object.password, object.height];
   console.log("[JOSEF] Create person with data = " + values)
-  pg.connect(process.env.DATABASE_URL, function(err, client, callback) {
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     if (err) return callback(err);
     client.query('INSERT INTO persons (name, email, password, height) VALUES(?, ?, ?, ?)', values,
     function (err, result) {
+      done()
       if (err) return callback(err);
       console.log("[JOSEF] user created with ID " +result.insertId)
       callback(null, result.insertId);
