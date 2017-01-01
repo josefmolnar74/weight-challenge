@@ -1,38 +1,26 @@
 {
-  "name": "nodejs-ex",
-  "version": "0.0.1",
-  "description": "Node.js sample app for OpenShift 3",
-  "main": "server.js",
-  "dependencies": {
-    "async": "^2.1.4",
-    "chai": "^3.5.0",
-    "chai-http": "^2.0.1",
-    "ejs": "^2.5.5",
-    "express": "^4.14.0",
-    "mocha": "^2.4.5",
-    "mongodb": "^2.1.16",
-    "morgan": "^1.7.0",
-    "mysql": "^2.12.0",
-    "object-assign": "^4.1.0",
-    "pg": "^6.1.2",
-    "socket.io": "^1.7.2"
-  },
-  "engine": {
-    "node": "*",
-    "npm": "*"
-  },
+  "name": "nodejs-weight-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "db.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "IP=0.0.0.0 PORT=3030 mocha --timeout 5000 tests/*_test.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/openshift/nodejs-ex.git"
+    "url": "git+https://github.com/josefmolnar74/weight-challenge-nodejs.git"
   },
-  "author": "Steve Speicher <sspeiche@gmail.com>",
-  "license": "CC-BY-1.0",
+  "author": "",
+  "license": "ISC",
   "bugs": {
-    "url": "http://github.com/openshift/nodejs-ex/issues"
+    "url": "https://github.com/josefmolnar74/weight-challenge-nodejs/issues"
   },
-  "homepage": "http://github.com/openshift/nodejs-ex"
+  "homepage": "https://github.com/josefmolnar74/weight-challenge-nodejs#readme",
+  "dependencies": {
+    "async": "^2.1.4",
+    "express": "^4.14.0",
+    "mysql": "^2.12.0",
+    "socket.io": "^1.7.2"
+  }
 }
