@@ -3,7 +3,7 @@ var pg = require('pg');
 var async = require('async');
 
 exports.create = function(object, callback) {
-  console.log('[JOSEF] Update data')
+  console.log('[JOSEF] Create data')
   async.waterfall([
     async.apply(createWeightData, object),
     async.apply(getWeightData)
@@ -26,15 +26,15 @@ var createWeightData = function(object, callback) {
     }
     client.query('INSERT INTO weight (person_id, weight, date) VALUES($1, $2, $3)', values, function (err, result) {
       console.log('[JOSEF] pg connect success');
-      done()
       if (err){
         console.log('[JOSEF] client query failure');
-      } return callback(err);
+        return callback(err);
+      }
       console.log('[JOSEF] client query success');
       console.log("[JOSEF] user created with ID " +result.insertId)
       var resultObject = {weight_id: result.insertId};
-      console.log('[JOSEF] resultObject = ' +resultObject)
       callback(null, resultObject);
+      done()
     });
   });
 }
@@ -44,7 +44,7 @@ exports.get = function(object,callback){
 };
 
 var getWeightData = function(object, callback) {
-  console.log('[JOSEF] getWeightData, object = ' +object)
+  console.log('[JOSEF] getWeightData')
   if (object.weight_id != null){
     getOneWeightData(object.weight_id, callback)
   } else if (object.person_id != null){
