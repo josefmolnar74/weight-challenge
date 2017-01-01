@@ -19,14 +19,18 @@ exports.create = function(object, callback) {
   console.log("[JOSEF] Create person with data = " + values)
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     if (err){
-      done();
+      done()
+      console.log('[JOSEF] pg connect failure');
       console.log(err);
       return callback(err);
     }
-    client.query('INSERT INTO persons (name, email, password, height) VALUES(?, ?, ?, ?)', values,
-    function (err, result) {
+    client.query('INSERT INTO persons (name, email, password, height) VALUES(?, ?, ?, ?)', values, function (err, result) {
+      console.log('[JOSEF] pg connect success');
       done()
-      if (err) return callback(err);
+      if (err){
+        console.log('[JOSEF] client query failure');
+      } return callback(err);
+      console.log('[JOSEF] client query success');
       console.log("[JOSEF] user created with ID " +result.insertId)
       callback(null, result.insertId);
     });
