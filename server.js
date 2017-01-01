@@ -24,8 +24,8 @@ var util = require('util');
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.IP   || '127.0.0.1';
-        self.port      = process.env.PORT || 8080;
+        self.ipaddress = process.env.IP   || '0.0.0.0';
+        self.port      = process.env.PORT || 5000;
 
     };
 
