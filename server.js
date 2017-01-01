@@ -24,15 +24,9 @@ var util = require('util');
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
-        self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
+        self.ipaddress = process.env.IP   || '127.0.0.1';
+        self.port      = process.env.PORT || 8080;
 
-        if (typeof self.ipaddress === "undefined") {
-            //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
-            //  allows us to run/test the app locally.
-            console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
-            self.ipaddress = "127.0.0.1";
-        };
     };
 
     /**
@@ -244,7 +238,7 @@ var util = require('util');
  */
 var weigthApp = new WeightApp();
 console.log('[Josef] Node JS application created')
-//console.log(util.inspect(process.env));
+console.log(util.inspect(process.env));
 weigthApp.initialize();
 weigthApp.start();
 
