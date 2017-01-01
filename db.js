@@ -26,8 +26,8 @@ var connection = mysql.createConnection({
  *  Connect to mysql database.
  */
 exports.connect = function (mode, done) {
-      console.log('[JOSEF] connect to mysql database');
-
+      console.log('[JOSEF] Connect to mysql database');
+      console.log(process.env.DATABASE_URL)
       connection.connect(function(err) {
         if (err) {
           console.error('[JOSEF] error connecting: ' + err.stack);
