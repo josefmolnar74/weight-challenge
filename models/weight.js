@@ -12,7 +12,7 @@ exports.create = function(object, callback) {
       console.log(err);
       return callback(err);
     }
-    client.query('INSERT INTO public.weight (person_ID, weight, date) VALUES($1, $2, $3)', values, function (err, result) {
+    client.query('INSERT INTO weight (person_ID, weight, date) VALUES($1, $2, $3)', values, function (err, result) {
       console.log('[JOSEF] pg connect success');
       done()
       if (err){
