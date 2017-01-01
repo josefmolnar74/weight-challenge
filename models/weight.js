@@ -32,7 +32,7 @@ var createWeightData = function(object, callback) {
       } return callback(err);
       console.log('[JOSEF] client query success');
       console.log("[JOSEF] user created with ID " +result.insertId)
-      var resultObject = {weight_ID: result.insertId};
+      var resultObject = {weight_id: result.insertId};
       callback(null, resultObject);
     });
   });
