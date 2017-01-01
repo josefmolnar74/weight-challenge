@@ -109,10 +109,10 @@ http.listen(app.get('port'), function() {
 
 //Connect to mongodb database
 
-db.connect(db.MODE_PRODUCTION, function(err){
-  console.log("[JOSEF] Connected to MySQL");
-  if(err) throw err;
-});
+//db.connect(db.MODE_PRODUCTION, function(err){
+//  console.log("[JOSEF] Connected to MySQL");
+//  if(err) throw err;
+//});
 
 function createHdrJsonObject(data, error){
   var responseHeader = { message_ID: JSON.parse(data).message_ID,
