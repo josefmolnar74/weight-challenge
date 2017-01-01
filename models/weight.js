@@ -47,7 +47,7 @@ var getWeightData = function(object, callback) {
     getOneWeightData(object.weight_id, callback)
   } else if (object.person_ID != null){
     getPersonWeightData(object.person_ID, callback)
-  } else console.log('[JOSEF] something wrong no getHealthdata db query')
+  } else console.log('[JOSEF] getWeightData something wrong')
 };
 
 var getOneWeightData = function(weight_id, callback) {
