@@ -2,15 +2,18 @@
 var async = require('async');
 
 exports.create = function(object, callback) {
-  console.log('[CME] healthdata.create')
-  async.waterfall([
-    async.apply(createHealthdata, object),
-    async.apply(getHealthdata)
-  ],
-  function(err, results){
-    if (err) return callback(err);
-    callback(null, results);
-  })
+  console.log('[JOSEF] weight.create')
+  var values = [object.weight_ID, object.person_ID, object.weight, object.date];
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query('INSERT INTO weight (weight_ID, person_ID, weight, date) VALUES(?, ?, ?, ?)', values,
+    function(err, result) {
+      done();
+      if (err) return callback(err);
+      var resultObject = {weight_ID: result.insertId};
+      console.log("[JOSEF] weight created with ID " +resultObject.weight_ID)
+      callback(null, resultObject);
+    });
+  });
 };
 
 var createHealthdata = function(object, callback){

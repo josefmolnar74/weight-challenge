@@ -19,7 +19,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res){
-  res.sendFile('views/index_test.html', { root : __dirname});
+  res.sendFile('views/index.html', { root : __dirname});
 });
 
 io.on('connection', function(socket){//Add socket
