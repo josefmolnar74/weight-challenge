@@ -53,12 +53,13 @@ var DB_USERNAME = process.env.DATABASE_USERNAME
 var DB_USERPASSWORD = process.env.DATABASE_PASSWORD
 var DB_DATABASE = process.env.DATABASE_NAME
 
+//mysql://b2f92b012a3528:fef4f60d@us-cdbr-iron-east-04.cleardb.net/heroku_e68a2593eaec1f5?reconnect=true
 var connection = mysql.createConnection({
-  host     : DB_HOST,
-  user     : DB_USERNAME,
-  password : DB_USERPASSWORD,
+  host     : 'us-cdbr-iron-east-04.cleardb.net',
+  user     : 'b2f92b012a3528',
+  password : 'fef4f60d',
 //  database: mode === exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
-  database : DB_DATABASE
+  database : 'heroku_e68a2593eaec1f5'
 });
 /*
 var connection = mysql.createConnection({
