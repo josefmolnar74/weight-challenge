@@ -23,7 +23,7 @@ var connection = mysql.createConnection({
   database : DB_DATABASE
 });
 */
-/**
+/** q
  *  Connect to mysql database.
  */
 exports.connect = function (mode, done) {

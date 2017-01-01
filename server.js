@@ -107,13 +107,6 @@ http.listen(app.get('port'), function() {
  console.log('[JOSEF] Node app is running on port', app.get('port'));
 });
 
-//Connect to mongodb database
-
-db.connect(db.MODE_PRODUCTION, function(err){
-  if(err) throw err;
-  console.log("[JOSEF] Connected to MySQL");
-});
-
 function createHdrJsonObject(data, error){
   var responseHeader = { message_ID: JSON.parse(data).message_ID,
                         function: JSON.parse(data).function,

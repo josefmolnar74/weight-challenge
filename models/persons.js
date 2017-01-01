@@ -1,4 +1,4 @@
-//var db = require('../db.js');
+var pg = require('pg')
 var async = require('async');
 
 exports.checkLoginData = function(email, password, callback) {
@@ -17,66 +17,24 @@ exports.checkLoginData = function(email, password, callback) {
 
 var findUser = function(email, password, callback){
   console.log("[CME] db query with " + email + " " +password)
-  db.get().query('SELECT * FROM persons WHERE email = ? and password = ? ', [email, password], function(err, rows) {
+  db.get().query('SELECT * FROM persons WHERE person_email = ? and person_password = ? ', [email, password], function(err, rows) {
     if (err) return callback(err);
     console.log("[CME] findUser callback "+JSON.stringify(rows))
     callback(null, rows[0]);
   });
 }
 
-var getPatientsForUser = function(person, callback){
-  if (person == null) return callback(null,person)
-  console.log("[CME] getPatientsForUser db query with person " +person)
-  db.get().query('SELECT patients.patient_ID, patient_name, relationship FROM persons_patients_junction JOIN persons ON persons.person_ID = persons_patients_junction.person_ID JOIN patients ON patients.patient_ID = persons_patients_junction.patient_ID WHERE persons.person_ID = ?', person.person_ID,
-  function (err, rows) {
-    if (err) return callback(err);
-    console.log("[CME] recieved data" +rows)
-    person.patient = rows;
-    console.log("[CME] getPatientsForUser callback "+JSON.stringify(rows))
-    callback(null, person);
+exports.create = function(object, callback) {
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query('SELECT * FROM test_table', function(err, result) {
+      done();
+      if (err)
+       { console.error(err); response.send("Error " + err); }
+      else
+       { response.render('pages/db', {results: result.rows} ); }
+    });
   });
-}
-
-var getPatientCareTeam = function(person, callback){
-  if (person == null) return callback(null, person);
-  async.each(person.patient, function(patient, callback){
-    console.log("[CME] get careteam for patient = " +patient.patient_ID);
-    db.get().query('SELECT persons.person_ID, name, email, relationship, admin, avatar FROM persons_patients_junction JOIN persons ON persons.person_ID = persons_patients_junction.person_ID JOIN patients ON patients.patient_ID = persons_patients_junction.patient_ID WHERE patients.patient_ID = ?', patient.patient_ID,
-    function (err, rows) {
-      if (err) return callback(err)
-      patient.care_team = rows;
-      console.log("[CME] patient care team = "+JSON.stringify(patient.care_team))
-      callback();
-    });
-  },
-  function(err){
-    if(err) return callback(err);
-    else console.log("[CME] All careteams completed");
-    console.log("[CME] Complete person data " + JSON.stringify(person))
-    callback(null, person)
-  })
-};
-
-var getPatientEvents = function(person, callback){
-  if (person == null) return callback(null, person);
-  async.each(person.patient, function(patient, callback){
-    console.log("[CME] get events for patient = " +patient.patient_ID);
-    db.get().query('SELECT event_ID, event_type, start_date, start_time, end_date, end_time, notes FROM events WHERE patient_ID = ?', patient.patient_ID,
-    function (err, rows) {
-      if (err) return callback(err)
-      patient.events = rows;
-      console.log("[CME] patient care team = "+JSON.stringify(patient.events))
-      callback();
-    });
-  },
-  function(err){
-    if(err) return callback(err);
-    else console.log("[CME] All events completed");
-    console.log("[CME] Complete person data " + JSON.stringify(person))
-    callback(null, person)
-  })
-};
-
+});
 exports.create = function(object, callback) {
   console.log('[CME] persons.create');
   async.waterfall([
@@ -90,16 +48,6 @@ exports.create = function(object, callback) {
     callback(null, result);
   })
 };
-
-var findUserWithID = function(object, callback){
-  console.log("[CME] findUserWithID with person_ID = " + object.person_ID)
-  db.get().query('SELECT * FROM persons WHERE person_ID = ?', object.person_ID,
-  function(err, result) {
-    if (err) return callback(err);
-    console.log('[CME] findUserWithID result = '+result[0])
-    callback(null, result[0])
-  });
-}
 
 var findUserWithEmail = function(object, callback){
   console.log("[CME] findUserWithEmail with email = " + object.email)
