@@ -48,17 +48,17 @@ if(process.env.OPENSHIFT_MYSQL_DB_PASSWORD){
   connectionString += 'admin2DlLfX8:SsmT4aGI5fyQ@' +'127.0.0.1:27017' +'/cancermeapp';
 }
 */
-var DB_HOST =  process.env.HEROKU_MYSQL_DB_HOST
-var DB_USERNAME = process.env.HEROKU_MYSQL_DB_USERNAME
-var DB_USERPASSWORD = process.env.HEROKU_MYSQL_DB_PASSWORD
-var DB_DATABASE = process.env.HEROKU_MYSQL_DB_DATABASE
+var DB_HOST =  process.env.DATABASE_HOST
+var DB_USERNAME = process.env.DATABASE_USERNAME
+var DB_USERPASSWORD = process.env.DATABASE_PASSWORD
+var DB_DATABASE = process.env.DATABASE_NAME
 
 var connection = mysql.createConnection({
   host     : DB_HOST,
   user     : DB_USERNAME,
   password : DB_USERPASSWORD,
 //  database: mode === exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
-  database : DB_DATABASE,
+  database : DB_DATABASE
 });
 /*
 var connection = mysql.createConnection({
