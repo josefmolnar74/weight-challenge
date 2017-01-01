@@ -18,12 +18,12 @@ var connection = mysql.createConnection({
  *  Connect to mysql database.
  */
 exports.connect = function (mode, done) {
-      console.log('[josef] connect to mysql database');
+      console.log('[JOSEF] connect to mysql database');
 
       connection.connect(function(err) {
         if (err) {
-          console.error('[josef] error connecting: ' + err.stack);
-            return done(new Error('[josef] Missing database connection.'));
+          console.error('[JOSEF] error connecting: ' + err.stack);
+            return done(new Error('[JOSEF] Missing database connection.'));
         };
         done()
       });
