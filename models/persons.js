@@ -24,7 +24,7 @@ exports.create = function(object, callback) {
       console.log(err);
       return callback(err);
     }
-    client.query('INSERT INTO public.persons (name, email, password, height) VALUES(?, ?, ?, ?)', values, function (err, result) {
+    client.query('INSERT INTO public.persons (name, email, password, height) VALUES($1, $2, $3, $4)', values, function (err, result) {
       console.log('[JOSEF] pg connect success');
       done()
       if (err){
