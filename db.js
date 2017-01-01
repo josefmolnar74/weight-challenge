@@ -1,24 +1,6 @@
 var mysql = require('mysql');
 
 var PRODUCTION_DB = 'weight_challenge'
-//  , TEST_DB = 'app_test_database'
-
-//exports.MODE_TEST = 'mode_test'
-//exports.MODE_PRODUCTION = 'mode_production'
-//var mode = exports.MODE_PRODUCTION;
-
-// if OPENSHIFT env variables are present, use the available connection info:
-/*var connectionString = "mysql://";
-if(process.env.OPENSHIFT_MYSQL_DB_PASSWORD){
-  connectionString = process.env.OPENSHIFT_MYSQL_DB_USERNAME + ":" +
-  process.env.OPENSHIFT_MYSQL_DB_PASSWORD + "@" +
-  process.env.OPENSHIFT_MYSQL_DB_HOST + ':' +
-  process.env.OPENSHIFT_MYSQL_DB_PORT + '/' +
-  process.env.OPENSHIFT_APP_NAME;
-} else {
-  connectionString += 'admin2DlLfX8:SsmT4aGI5fyQ@' +'127.0.0.1:27017' +'/cancermeapp';
-}
-*/
 
 var mysqlURL = process.env.OPENSHIFT_MYSQL_DB_URL || process.env.MYSQL_URL,
     mysqlURLLabel = "";
@@ -55,7 +37,7 @@ var PRODUCTION_DB = 'cancermeapp'
 //var mode = exports.MODE_PRODUCTION;
 
 // if OPENSHIFT env variables are present, use the available connection info:
-var connectionString = "mysql://";
+/*var connectionString = "mysql://";
 if(process.env.OPENSHIFT_MYSQL_DB_PASSWORD){
   connectionString = process.env.OPENSHIFT_MYSQL_DB_USERNAME + ":" +
   process.env.OPENSHIFT_MYSQL_DB_PASSWORD + "@" +
@@ -65,11 +47,11 @@ if(process.env.OPENSHIFT_MYSQL_DB_PASSWORD){
 } else {
   connectionString += 'admin2DlLfX8:SsmT4aGI5fyQ@' +'127.0.0.1:27017' +'/cancermeapp';
 }
-
-var DB_HOST =  process.env.OPENSHIFT_MYSQL_DB_HOST || 'localhost'
-var DB_USERNAME = process.env.OPENSHIFT_MYSQL_DB_USERNAME || 'userEIW'
-var DB_USERPASSWORD = process.env.OPENSHIFT_MYSQL_DB_PASSWORD || 'ubETTQra0MgYmhHL'
-var DB_DATABASE = process.env.OPENSHIFT_MYSQL_DB_DATABASE || 'sampledb'
+*/
+var DB_HOST =  process.env.DB_HOST
+var DB_USERNAME = process.env.DB_USERNAME
+var DB_USERPASSWORD = process.env.DB_PASSWORD
+var DB_DATABASE = process.env.DB_DATABASE
 
 var connection = mysql.createConnection({
   host     : DB_HOST,
@@ -77,7 +59,6 @@ var connection = mysql.createConnection({
   password : DB_USERPASSWORD,
 //  database: mode === exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
   database : DB_DATABASE,
-  socket : '/var/lib/mysql/mysql.sock'
 });
 /*
 var connection = mysql.createConnection({
