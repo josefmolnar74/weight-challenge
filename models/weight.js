@@ -1,20 +1,29 @@
 //var db = require('../db.js');
+var pg = require('pg');
 var async = require('async');
 
 exports.create = function(object, callback) {
-  console.log('[JOSEF] weight.create')
-  var values = [object.weight_ID, object.person_ID, object.weight, object.date];
+  var values = [object.person_ID, object.weight, object.date];
+  console.log("[JOSEF] Create weight with data = " + values)
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    client.query('INSERT INTO weight (weight_ID, person_ID, weight, date) VALUES(?, ?, ?, ?)', values,
-    function(err, result) {
-      done();
-      if (err) return callback(err);
-      var resultObject = {weight_ID: result.insertId};
-      console.log("[JOSEF] weight created with ID " +resultObject.weight_ID)
-      callback(null, resultObject);
+    if (err){
+      done()
+      console.log('[JOSEF] pg connect failure');
+      console.log(err);
+      return callback(err);
+    }
+    client.query('INSERT INTO public.weight (person_ID, weight, date) VALUES($1, $2, $3)', values, function (err, result) {
+      console.log('[JOSEF] pg connect success');
+      done()
+      if (err){
+        console.log('[JOSEF] client query failure');
+      } return callback(err);
+      console.log('[JOSEF] client query success');
+      console.log("[JOSEF] user created with ID " +result.insertId)
+      callback(null, result.insertId);
     });
   });
-};
+}
 
 var createHealthdata = function(object, callback){
   console.log("[CME] createHealthdata ")
