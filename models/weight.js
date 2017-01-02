@@ -119,19 +119,20 @@ updateWeightdata = function(object, callback) {
     }
     client.query('UPDATE weight SET person_id=$1, weight=$2, date=$3 WHERE weight_id=$4', values, function(err, result) {
       console.log('[JOSEF] pg connect success');
-      done()
       if (err){
         console.log('[JOSEF] client query failure');
-      } return callback(err);
+        return callback(err);
+      }
       console.log('[JOSEF] client query success');
       console.log("[JOSEF] user created with ID " +result.insertId)
-      callback(null, result.insertId);
+      callback(null, result.rows);
+      done()
     });
   });
 };
 
 exports.delete = function(object, callback){
-  console.log('[JOSEF] weight.delete, weight_id = '+object.weight_id);
+  console.log('[JOSEF] weight.delete, weight_id='+object.weight_id);
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     if (err){
       done()
@@ -139,14 +140,15 @@ exports.delete = function(object, callback){
       console.log(err);
       return callback(err);
     }
-    client.query('DELETE FROM weight WHERE weight_id = $1', object.weight_id, function(err, result) {
+    client.query('DELETE FROM weight WHERE weight_id='+object.weight_id, function(err, result) {
       console.log('[JOSEF] pg connect success');
-      done()
       if (err){
         console.log('[JOSEF] client query failure');
-      } return callback(err);
+        return callback(err);
+      }
       console.log('[JOSEF] client query success');
       callback(null, result);
+      done()
     });
   });
 };
@@ -162,13 +164,14 @@ exports.deleteAllWeightData = function(callback){
     }
     client.query('DELETE FROM weight',function(err, result) {
       console.log('[JOSEF] pg connect success');
-      done()
       if (err){
         console.log('[JOSEF] client query failure');
-      } return callback(err);
+        return callback(err);
+      }
       console.log("[JOSEF] All weight data deleted");
       console.log('[JOSEF] client query success');
       callback(null, 'weightDeleted');
+      done()
     });
   });
 }
