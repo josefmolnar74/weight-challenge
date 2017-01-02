@@ -62,12 +62,12 @@ var getOneWeightData = function(weight_id, callback) {
     }
     client.query('SELECT * FROM weight WHERE weight_id='+weight_id, function(err, result) {
       console.log('[JOSEF] pg connect success');
-      done()
       if (err){
         console.log('[JOSEF] client query failure');
       } return callback(err);
       console.log('[JOSEF] client query success');
       callback(null, result);
+      done()
     });
   });
 };
@@ -81,14 +81,14 @@ var getPersonWeightData = function(person_ID, callback) {
       console.log(err);
       return callback(err);
     }
-    client.query('SELECT * FROM weight WHERE person_ID =?', person_ID, function(err, result) {
+    client.query('SELECT * FROM weight WHERE person_ID ='+person_ID, function(err, result) {
       console.log('[JOSEF] pg connect success');
-      done()
       if (err){
         console.log('[JOSEF] client query failure');
       } return callback(err);
       console.log('[JOSEF] client query success');
       callback(null, result);
+      done()
     });
   });
 };
