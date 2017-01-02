@@ -67,8 +67,7 @@ var getOneWeightData = function(weight_id, callback) {
         return callback(err);
       }
       console.log('[JOSEF] client query success');
-      console.log(result)
-      callback(null, result);
+      callback(null, result.rows);
       done()
     });
   });
@@ -90,7 +89,7 @@ var getPersonWeightData = function(person_ID, callback) {
         return callback(err);
       }
       console.log('[JOSEF] client query success');
-      callback(null, result);
+      callback(null, result.rows);
       done()
     });
   });
