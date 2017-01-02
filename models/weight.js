@@ -24,7 +24,7 @@ var createWeightData = function(object, callback) {
       console.log(err);
       return callback(err);
     }
-    client.query('INSERT INTO weight (person_id, weight, date) VALUES($1, $2, $3)', values, function (err, result) {
+    client.query('INSERT INTO weight (person_id, weight, date) VALUES($1, $2, $3) RETURNING id', values, function (err, result) {
       console.log('[JOSEF] pg connect success');
       if (err){
         console.log('[JOSEF] client query failure');
