@@ -67,6 +67,7 @@ var getOneWeightData = function(weight_id, callback) {
         return callback(err);
       }
       console.log('[JOSEF] client query success');
+      console.log(result)
       callback(null, result);
       done()
     });
