@@ -98,8 +98,8 @@ var getPersonWeightData = function(person_ID, callback) {
 exports.update = function(object, callback) {
   console.log('[JOSEF] Update weight data')
   async.waterfall([
-    async.apply(updateHealthdata, object),
-    async.apply(getHealthdata)
+    async.apply(updateWeightdata, object),
+    async.apply(getWeightData)
   ],
   function(err, results){
     if (err) return callback(err);

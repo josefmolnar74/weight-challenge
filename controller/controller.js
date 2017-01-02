@@ -40,7 +40,7 @@ exports.read = function(data, done){
 
     case 'person':
       console.log('[JOSEF] Get person')
-      persons.getPerson(object, function(err, rows){
+      persons.get(object, function(err, rows){
         if (err) return done(err);
         done(null, rows);
       });
