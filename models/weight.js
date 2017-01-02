@@ -85,7 +85,8 @@ var getPersonWeightData = function(person_ID, callback) {
       console.log('[JOSEF] pg connect success');
       if (err){
         console.log('[JOSEF] client query failure');
-      } return callback(err);
+        return callback(err);
+      }
       console.log('[JOSEF] client query success');
       callback(null, result);
       done()
