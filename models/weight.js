@@ -32,8 +32,8 @@ var createWeightData = function(object, callback) {
       }
       console.log('[JOSEF] client query success');
       var resultObject = {weight_id: result.insertId};
-      console.log(result.rows[1])
-      callback(null, result.rows[1]);
+      console.log(result.rows[0])
+      callback(null, result.rows[0]);
       done()
     });
   });
