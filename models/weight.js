@@ -31,7 +31,6 @@ var createWeightData = function(object, callback) {
         return callback(err);
       }
       console.log('[JOSEF] client query success');
-      var resultObject = {weight_id: result.insertId};
       console.log(result.rows[0])
       callback(null, result.rows[0]);
       done()
@@ -61,7 +60,7 @@ var getOneWeightData = function(weight_id, callback) {
       console.log(err);
       return callback(err);
     }
-    client.query('SELECT * FROM weight WHERE weight_id =$1', weight_id, function(err, result) {
+    client.query('SELECT * FROM weight WHERE weight_id='+weight_id, function(err, result) {
       console.log('[JOSEF] pg connect success');
       done()
       if (err){
